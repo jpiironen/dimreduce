@@ -165,7 +165,7 @@ spca <- function(x,y=NULL,family=gaussian(), ncsup=NULL, nctot=NULL,
   if (verbose)
     print('Done.')
   
-  res <- list(rotation=rotation, x=latent, v=v_all, sdev=apply(latent,2,'sd'), 
+  res <- list(w=rotation, z=latent, v=v_all, sdev=apply(latent,2,'sd'), 
               pval=pval, centers=centers, scales=scales, exclude=exclude)
   
   class(res) <- 'spca'
@@ -185,7 +185,7 @@ predict.spca <- function(model, xnew) {
   
   ok <- setdiff(1:d, model$exclude)
   xnew_standard <- t((t(xnew[,ok,drop=F])-model$centers[ok]) / model$scales[ok])
-  return(xnew_standard %*% model$rotation[ok,,drop=F])
+  return(xnew_standard %*% model$w[ok,,drop=F])
 }
 
 
