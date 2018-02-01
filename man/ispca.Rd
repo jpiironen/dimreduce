@@ -4,8 +4,8 @@
 \alias{ispca}
 \title{Iterative supervised principal components}
 \usage{
-ispca(x, y, thresh = NULL, nthresh = NULL, ncsup = NULL, nctot = NULL,
-  exclude = NULL, window = 500, verbose = TRUE, min_score = 1e-04,
+ispca(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NULL,
+  thresh = NULL, window = 500, verbose = TRUE, min_score = 1e-04,
   normalize = TRUE, center = TRUE, scale = TRUE, permtest = TRUE,
   permtest_type = "max-marginal", perms = 1000, alpha = 0.01,
   method = "svd", ...)
@@ -14,6 +14,48 @@ ispca(x, y, thresh = NULL, nthresh = NULL, ncsup = NULL, nctot = NULL,
 \item{x}{TODO}
 
 \item{y}{TODO}
+
+\item{nctot}{Total number of latent features to extract.}
+
+\item{ncsup}{Maximum number of latent features to extract that use supervision.}
+
+\item{exclude}{Columns (variables) in x to ignore when extrating the new features.}
+
+\item{nthresh}{Number of evaluations when finding the optimal screening threshold at each supervised
+iteration. Increasing this number can make the supervised iterations more accurate but also increases
+the computation time.}
+
+\item{thresh}{Instead of specifying \code{nthresh}, one can specify the candidate screening thresholds
+explicitly. These are numbers between 0 and 1 and are relative to the highest univariate score.
+By default seq(0,0.999,len=nthresh).}
+
+\item{window}{Maximum number of features to consider when computing each supervised component.
+Lowering this number makes the computation faster, but can make the algorithm less accurate
+if there are more potentially relevant features than this number.}
+
+\item{verbose}{Whether to print some messages along the way.}
+
+\item{min_score}{Terminate the computation at the latest when the maximum univariate score drops
+below this.}
+
+\item{normalize}{Whether to scale the extracted features so that they all have standard deviation
+of one.}
+
+\item{center}{Whether to center the original features before the computation.}
+
+\item{scale}{Whether to scale the original features to have unit variance before the computation.}
+
+\item{permtest}{Whether to use permutation test to decide the number of supervised components.}
+
+\item{permtest_type}{Either 'max-marginal' or 'marginal'.}
+
+\item{perms}{Number of permutations to estimate the p-values for univariate scores.}
+
+\item{alpha}{Significance level used in the permutation test to decide whether to continue
+supervised iteration.}
+
+\item{method}{Method to compute the principal components. Either 'svd' or 'power'. Power can sometimes
+be slightly faster but in some cases can have very slow convergence.}
 
 \item{...}{Currently ignored.}
 }

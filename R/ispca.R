@@ -5,6 +5,32 @@
 #' algorithm.
 #' @param x TODO
 #' @param y TODO
+#' @param nctot Total number of latent features to extract.
+#' @param ncsup Maximum number of latent features to extract that use supervision.
+#' @param exclude Columns (variables) in x to ignore when extrating the new features.
+#' @param nthresh Number of evaluations when finding the optimal screening threshold at each supervised
+#' iteration. Increasing this number can make the supervised iterations more accurate but also increases
+#' the computation time.
+#' @param thresh Instead of specifying \code{nthresh}, one can specify the candidate screening thresholds
+#' explicitly. These are numbers between 0 and 1 and are relative to the highest univariate score.
+#' By default seq(0,0.999,len=nthresh).
+#' @param window Maximum number of features to consider when computing each supervised component.
+#' Lowering this number makes the computation faster, but can make the algorithm less accurate
+#' if there are more potentially relevant features than this number.
+#' @param verbose Whether to print some messages along the way. 
+#' @param min_score Terminate the computation at the latest when the maximum univariate score drops
+#'  below this.
+#' @param normalize Whether to scale the extracted features so that they all have standard deviation
+#'  of one.
+#' @param center Whether to center the original features before the computation.
+#' @param scale Whether to scale the original features to have unit variance before the computation.
+#' @param permtest Whether to use permutation test to decide the number of supervised components.
+#' @param permtest_type Either 'max-marginal' or 'marginal'.
+#' @param perms Number of permutations to estimate the p-values for univariate scores.
+#' @param alpha Significance level used in the permutation test to decide whether to continue
+#' supervised iteration.
+#' @param method Method to compute the principal components. Either 'svd' or 'power'. Power can sometimes
+#' be slightly faster but in some cases can have very slow convergence.
 #' @param ... Currently ignored.
 #'
 #' @return ispca-object that is similar in spirit to the object returned by \code{\link[stats]{prcomp}}.
@@ -37,8 +63,8 @@
 #'
 
 #' @export
-ispca <- function(x,y, thresh=NULL, nthresh=NULL, ncsup=NULL, nctot=NULL, 
-                  exclude=NULL, window=500, verbose=TRUE, min_score=1e-4, normalize=TRUE,
+ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thresh=NULL,
+                  window=500, verbose=TRUE, min_score=1e-4, normalize=TRUE,
                   center=TRUE, scale=TRUE, permtest=TRUE, permtest_type='max-marginal', perms=1000,
                   alpha=0.01, method='svd', ...) {
   
@@ -209,14 +235,10 @@ ispca <- function(x,y, thresh=NULL, nthresh=NULL, ncsup=NULL, nctot=NULL,
   }
   
   if (normalize) {
+    # scale the extracted features so that they have standard deviation of one
     sz <- apply(latent,2,'sd')
     latent <- t(t(latent)/sz)
     rotation <- t(t(rotation)/sz)
-    # ok <- sz > 1e-6 # remove features with very small sd for numerical stability
-    # latent <- t(t(latent[,ok])/sz[ok])
-    # rotation <- t(t(rotation[,ok])/sz[ok])
-    # if (!all(ok))
-    # print('Note: Removed one or more latent variables with extremely small variability to avoid numerical problems.')
   }
 
   if (verbose)
