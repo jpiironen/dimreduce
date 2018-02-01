@@ -14,7 +14,7 @@ if (!require(devtools)) {
   install.packages("devtools")
   library(devtools)
 }
-devtools::install_github('stan-dev/dimreduce')
+devtools::install_github('jpiironen/dimreduce')
 ```
 
 Example
