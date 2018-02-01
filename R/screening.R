@@ -1,10 +1,58 @@
 
+#' Univariate feature scores and significance tests
+#'
+#' \code{featscore} computes the univariate scores for each feature, and 
+#' \code{featscore.test} can be used to compute the corresponding p-values to measure 
+#' statistical significance of these values.
+#' 
+#' @name featscores
+#' 
+#' @param x The original feature matrix, columns denoting the features and rows the instances.
+#' @param y A vector with the observed target values we try to predict using \code{x}.
+#' Can be factor for classification problems.
+#' @param type Score type. One of 'pearson', 'kendall', 'spearman', or 'runs'. The first three
+#' denote the type of correlation computed (will be passed to \link[stats]{cor}), whereas runs
+#' denote the runs test, that can potentially detect any nonlinear relationship. 
+#' @param exclude Columns (variables) in x to ignore. The score will be zero for these.
+#' @param test.max If TRUE, compute the p-value for the maximum of the univariate scores.
+#' If FALSE (default), compute p-values separately for each feature.
+#' @param perms Number of random permutations to estimate the p-values for univariate scores.
+#' @param normalize Whether to normalize the features before computation. For internal usage only
+#' to avoid repeated computations.
+#' @param ... Currently ignored.
+#'
+#'
+#' @return A vector giving the univariate scores for each feature.
+#' 
+#' @section Details:
+#' 
+#' Univariate scores are a useful technique to assess variable relevances, and 
+#' can be used for screening. The paper below has nice discussion and practical
+#' tips for how to use univariate scores and when they are appropriate.
+#' 
+#' @section References:
+#' 
+#' Neal, R. and Zhang, J. (2006). High dimensional classification with Bayesian 
+#' neural networks and Dirichlet diffusion trees. 
+#' In Guyon, I., Gunn, S., Nikravesh, M., and Zadeh, L. A., editors, 
+#' \emph{Feature Extraction, Foundations and Applications}, pages 265-296. Springer.
+#' 
+#'
+#' @examples
+#' \donttest{
+#' ### 
+#' s <- featscore(x,y) # correlation
+#' s <- featscore(x,y, type='runs') # runs test, can detect nonlinear effects
+#' s <- featscore.test(x,y,type='spearman') # p-values for the rank-correlations
+#' }
+#'
+NULL
 
-
-
-# good name: uniscore
+#' @rdname featscores
 #' @export
-uniscore <- function(x, y, type='corr', exclude=NULL, normalize=TRUE) {
+featscore <- function(x, y, type='pearson', exclude=NULL) {
+  
+  # if (is.null(normalize) && type %in% c('pearson','kendall','spearman'))
   
   if (is.vector(x))
     x <- matrix(x, ncol=1)
@@ -20,7 +68,7 @@ uniscore <- function(x, y, type='corr', exclude=NULL, normalize=TRUE) {
       score <- matrix(0, nrow=ncol(x), ncol=1)
       for (c in classes) {
         score <- pmax(score, 
-                      uniscore(x, y==c, type=type, exclude=exclude, normalize=normalize))
+                      featscore(x, y==c, type=type, exclude=exclude))
       }
       return(score)
     }
@@ -32,18 +80,16 @@ uniscore <- function(x, y, type='corr', exclude=NULL, normalize=TRUE) {
   ok <- rep(TRUE, ncol(x))
   ok[exclude] <- FALSE
   
-  if (normalize) {
-    x <- scale(x)
-    y <- scale(y)
-  }
+  # if (normalize) {
+  #   x <- scale(x)
+  #   y <- scale(y)
+  # }
   
   score <- matrix(0, nrow=ncol(x), ncol=ncol(y))
   
-  if (type == 'corr') {
-    score[ok,] <- abs( t(x[,ok,drop=F]) %*% y )  / (nrow(y)-1)
-  } else if (type == 'corr-rank') {
-    #apply(x,2,rank)
-    stop('not implemented yet.')
+  if (type %in% c('pearson','kendall','spearman')) {
+    # score[ok,] <- abs( t(x[,ok,drop=F]) %*% y )  / (nrow(y)-1)
+    score[ok,] <- abs(cor(x[,ok,drop=F], y, method=type))
   } else if (type == 'runs') {
     score[ok,] <- runs.score(x[,ok,drop=F], y)
   } else
@@ -56,9 +102,10 @@ uniscore <- function(x, y, type='corr', exclude=NULL, normalize=TRUE) {
 }
 
 
-# good name: uniscore.test
+
+#' @rdname featscores
 #' @export
-uniscore.test <- function(x,y, type='corr', exclude=NULL, perms=1000, test.max=FALSE) {
+featscore.test <- function(x,y, type='pearson', exclude=NULL, test.max=FALSE, perms=1000) {
   
   # permutations for y
   yperm <- matrix(0, nrow=length(y), ncol=perms)
@@ -66,7 +113,7 @@ uniscore.test <- function(x,y, type='corr', exclude=NULL, perms=1000, test.max=F
     yperm[,i] <- sample(y)
   
   # the actual score
-  s_actual <- uniscore(x, y, exclude=exclude, type=type)
+  s_actual <- featscore(x, y, exclude=exclude, type=type)
   
   # compute the scores with permuted y
   if (is.factor(y)) {
@@ -74,11 +121,11 @@ uniscore.test <- function(x,y, type='corr', exclude=NULL, perms=1000, test.max=F
     classes <- levels(y)
     s_perm <- 0
     for (c in classes) {
-      s_perm <- pmax(uniscore(x, yperm==c, exclude=exclude, type=type),
+      s_perm <- pmax(featscore(x, yperm==c, exclude=exclude, type=type),
                      s_perm)
     }
   } else {
-    s_perm <- uniscore(x,yperm,exclude=exclude, type=type)
+    s_perm <- featscore(x,yperm,exclude=exclude, type=type)
   }
   
   if (test.max) {

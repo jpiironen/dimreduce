@@ -50,7 +50,7 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
   
   # compute the scores for each feature that are used for screening (thresholding)
   D <- NCOL(x)
-  scores <- uniscore(x,y,exclude=exclude)
+  scores <- featscore(x,y,exclude=exclude)
   scores[scores < 1e-9] <- 0 # exclude very small scores for numerical stability
   max_score <- max(scores)
   cand <- order(scores, decreasing = T)
@@ -108,7 +108,7 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
       v <- pca$rotation
       pca$rotation <- matrix(0, nrow=D, ncol=NCOL(v))
       pca$rotation[ind,] <- v
-      pca$score <- uniscore(pca$x[,1],y)
+      pca$score <- featscore(pca$x[,1],y)
     }
     pca
   })

@@ -6,15 +6,34 @@
 #' scores for the features, and then computes standard PCA on using only the retained
 #' features.
 #' 
-#' @param x TODO
-#' @param y TODO
+#' @param x The original feature matrix, columns denoting the features and rows the instances.
+#' @param y A vector with the observed target values we try to predict using \code{x}.
+#' Can be factor for classification problems.
+#' @param nctot Total number of latent features to extract.
+#' @param ncsup Maximum number of latent features to extract that use supervision.
+#' @param exclude Columns (variables) in x to ignore when extrating the new features.
+#' @param verbose Whether to print some messages along the way. 
+#' @param normalize Whether to scale the extracted features so that they all have standard deviation
+#'  of one.
+#' @param preprocess Whether to center and scale the features before extracting the new features.
+#' @param alpha Significance level for the p-values of the univariate scores used to determine
+#'  which features survive the screening and are used to compute the supervised components.
+#' @param perms Number of permutations to estimate the p-values for univariate scores.
 #' @param ... Currently ignored.
+#'
 #'
 #' @return spca-object that is similar to the object returned by \code{\link[stats]{prcomp}}.
 #' The object will have the following elements:
 #' \describe{
-#'  \item{\code{foo}}{TODO.}
-#'  \item{\code{bar}}{TODO.}
+#'  \item{\code{w}}{The projection (or rotation) matrix W, that transforms the original data 
+#'  \eqn{X} into the new features \eqn{Z = X W} .}
+#'  \item{\code{z}}{The extracted latent features corresponding to the training inputs \eqn{X}.}
+#'  \item{\code{v}}{Matrix \eqn{V} that is used to compute \eqn{W} when combining supervised and
+#'  unsupervised components (see the Piironen and Vehtari (2018) for more information).}
+#'  \item{\code{sdev}}{Standard deviations of the new features.}
+#'  \item{\code{centers}}{Mean values for the original variables.}
+#'  \item{\code{scales}}{Scales of the original variables.}
+#'  \item{\code{exclude}}{Excluded variables.}
 #' }
 #' 
 #' @section Details:
@@ -31,16 +50,21 @@
 #' Bair, E., Hastie, T., Paul, D., and Tibshirani, R. (2006).
 #' Prediction by supervised principal components. \emph{Journal
 #' of the American Statistical Association}, 101(473):119-137.
+#' 
+#' Piironen, J. and Vehtari, A. (2018). Iterative supervised principal components.
+#' To appear in \emph{Proceedings of the 21st International Conference on Artificial
+#' Intelligence and Statistics (AISTATS)}.
 #'
 #' @examples
 #' \donttest{
 #' ### 
-#' dr <- spca(x,y, nctot=10)
+#' dr <- spca(x,y, nctot=2)
+#' z <- predict(dr, x) # the latent features
 #' }
 #'
 
 #' @export
-spca <- function(x,y=NULL,family=gaussian(), ncsup=NULL, nctot=NULL, 
+spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, 
                  exclude=NULL, verbose=TRUE, normalize=TRUE,
                  preprocess=TRUE, alpha=NULL, perms=1000, ...) {
   
@@ -94,7 +118,7 @@ spca <- function(x,y=NULL,family=gaussian(), ncsup=NULL, nctot=NULL,
       print('Performing permutation tests for the marginal scores..')
     
     # permutation test for the marginal scores, find out subset for the supervised PCs
-    pval <- uniscore.test(x,y, exclude=exclude, perms=perms)
+    pval <- featscore.test(x,y, exclude=exclude, perms=perms)
     indsup <- pval < alpha
     
     if (any(indsup)) {
