@@ -41,8 +41,8 @@ The object will have the following elements:
  \item{\code{w}}{The projection (or rotation) matrix W, that transforms the original data 
  \eqn{X} into the new features \eqn{Z = X W} .}
  \item{\code{z}}{The extracted latent features corresponding to the training inputs \eqn{X}.}
- \item{\code{v}}{Matrix \eqn{V} that is used to compute \eqn{W}. The columns of \eqn{V} indicate
- which variables become active at each iteration (see the paper below for more information).}
+ \item{\code{v}}{Matrix \eqn{V} that is used to compute \eqn{W} when combining supervised and
+ unsupervised components (see the Piironen and Vehtari (2018) for more information).}
  \item{\code{sdev}}{Standard deviations of the new features.}
  \item{\code{centers}}{Mean values for the original variables.}
  \item{\code{scales}}{Scales of the original variables.}
