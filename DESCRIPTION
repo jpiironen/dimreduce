@@ -1,0 +1,10 @@
+Package: dimreduce
+Type: Package
+Title: dimreduce 
+Version: 0.1
+Date: 2018-01-31
+Author: Juho Piironen
+Maintainer: Juho Piironen <juho.piironen@aalto.fi>
+Description: Functions for dimension reduction, mainly for supervised learning. Contains also methods for screening features.
+License: GPL-3
+RoxygenNote: 6.0.1

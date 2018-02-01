@@ -1,0 +1,11 @@
+*~
+*.o
+*.so
+*.Rproj
+.Rhistory
+.DS_Store
+.Rproj.user
+.Rapp.history
+.RData
+
+inst/doc
