@@ -1,20 +1,35 @@
-#' Projection predictive feature selection
+#' Dimension reduction for supervised learning
 #'
 #' @docType package
 #' @name dimreduce
 #' 
 #' 
-#' @description Description
+#' @description
 #' 
-#' \pkg{dimreduce} is an R package to perform supervised dimension reduction.
+#' \pkg{dimreduce} is an R package that provided functions for 
+#' (supervised) dimension reduction.
 #' 
-#'
+#' @section Functions:
+#' 
+#' \describe{
+#'  \item{\link{spca}, \link{ispca}}{
+#'  Supervised PCA (SPCA) and iterative supervised PCA (ISPCA), that are useful techniques for
+#'  dimension reduction. \link{spca} can also be used to  compute the standard unsupervised PCA.}
+#'  \item{\link{featscore}, \link{featscore.test}}{
+#'  Functions for computing univariate relevance scores for the features, that can be used 
+#'  for screening.}
+#' }
 #' 
 #' @section References:
 #' 
 #' Bair, E., Hastie, T., Paul, D., and Tibshirani, R. (2006).
 #' Prediction by supervised principal components. \emph{Journal
 #' of the American Statistical Association}, 101(473):119-137.
+#' 
+#' Neal, R. and Zhang, J. (2006). High dimensional classification with Bayesian 
+#' neural networks and Dirichlet diffusion trees. 
+#' In Guyon, I., Gunn, S., Nikravesh, M., and Zadeh, L. A., editors, 
+#' \emph{Feature Extraction, Foundations and Applications}, pages 265-296. Springer.
 #' 
 #' Piironen, Juho and Vehtari, Aki (2018). Iterative supervised principal components.
 #' To appear in \emph{Proceedings of the 21st International Conference on Artificial
