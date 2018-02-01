@@ -11,9 +11,10 @@ ispca(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NULL,
   method = "svd", ...)
 }
 \arguments{
-\item{x}{TODO}
+\item{x}{The original feature matrix, columns denoting the features and rows the instances.}
 
-\item{y}{TODO}
+\item{y}{A vector with the observed target values we try to predict using \code{x}.
+Can be factor for classification problems.}
 
 \item{nctot}{Total number of latent features to extract.}
 
@@ -63,9 +64,9 @@ be slightly faster but in some cases can have very slow convergence.}
 ispca-object that is similar in spirit to the object returned by \code{\link[stats]{prcomp}}.
 The object will have the following elements:
 \describe{
- \item{\code{rotation}}{ The projection (or rotation) matrix W, that transforms the original data 
+ \item{\code{w}}{The projection (or rotation) matrix W, that transforms the original data 
  \eqn{X} into the new features \eqn{Z = X W} .}
- \item{\code{x}}{TODO.}
+ \item{\code{z}}{The extracted latent features corresponding to the training inputs \eqn{X}.}
  \item{\code{v}}{Matrix \eqn{V} that is used to compute \eqn{W}. The columns of \eqn{V} indicate
  which variables become active at each iteration (see the paper below for more information).}
  \item{\code{sdev}}{Standard deviations of the new features.}

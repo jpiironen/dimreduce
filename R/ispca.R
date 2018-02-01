@@ -3,8 +3,10 @@
 #'
 #' Computes dimension reduction based on the iterative supervised principal components
 #' algorithm.
-#' @param x TODO
-#' @param y TODO
+#' 
+#' @param x The original feature matrix, columns denoting the features and rows the instances.
+#' @param y A vector with the observed target values we try to predict using \code{x}.
+#' Can be factor for classification problems.
 #' @param nctot Total number of latent features to extract.
 #' @param ncsup Maximum number of latent features to extract that use supervision.
 #' @param exclude Columns (variables) in x to ignore when extrating the new features.
@@ -36,9 +38,9 @@
 #' @return ispca-object that is similar in spirit to the object returned by \code{\link[stats]{prcomp}}.
 #' The object will have the following elements:
 #' \describe{
-#'  \item{\code{rotation}}{ The projection (or rotation) matrix W, that transforms the original data 
+#'  \item{\code{w}}{The projection (or rotation) matrix W, that transforms the original data 
 #'  \eqn{X} into the new features \eqn{Z = X W} .}
-#'  \item{\code{x}}{TODO.}
+#'  \item{\code{z}}{The extracted latent features corresponding to the training inputs \eqn{X}.}
 #'  \item{\code{v}}{Matrix \eqn{V} that is used to compute \eqn{W}. The columns of \eqn{V} indicate
 #'  which variables become active at each iteration (see the paper below for more information).}
 #'  \item{\code{sdev}}{Standard deviations of the new features.}
@@ -244,7 +246,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
   if (verbose)
     print('Done.')
   
-  res <- list(rotation=rotation, x=latent, v=v, sdev=apply(latent,2,'sd'), 
+  res <- list(w=rotation, z=latent, v=v, sdev=apply(latent,2,'sd'), 
               ncsup=ncsup, centers=centers, scales=scales, exclude=exclude)
   
   class(res) <- 'ispca'
@@ -263,7 +265,7 @@ predict.ispca <- function(model, xnew) {
   
   ok <- setdiff(1:d, model$exclude)
   xnew_standard <- t((t(xnew[,ok,drop=F])-model$centers[ok]) / model$scales[ok])
-  return(xnew_standard %*% model$rotation[ok,,drop=F])
+  return(xnew_standard %*% model$w[ok,,drop=F])
 }
 
 
