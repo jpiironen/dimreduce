@@ -2,7 +2,7 @@
 
 S3method(predict,ispca)
 S3method(predict,spca)
+export(featscore)
+export(featscore.test)
 export(ispca)
 export(spca)
-export(uniscore)
-export(uniscore.test)

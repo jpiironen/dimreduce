@@ -28,9 +28,9 @@
 #' @param scale Whether to scale the original features to have unit variance before the computation.
 #' @param permtest Whether to use permutation test to decide the number of supervised components.
 #' @param permtest_type Either 'max-marginal' or 'marginal'.
-#' @param perms Number of permutations to estimate the p-values for univariate scores.
 #' @param alpha Significance level used in the permutation test to decide whether to continue
 #' supervised iteration.
+#' @param perms Number of permutations to estimate the p-values for univariate scores.
 #' @param method Method to compute the principal components. Either 'svd' or 'power'. Power can sometimes
 #' be slightly faster but in some cases can have very slow convergence.
 #' @param ... Currently ignored.
@@ -44,7 +44,7 @@
 #'  \item{\code{v}}{Matrix \eqn{V} that is used to compute \eqn{W}. The columns of \eqn{V} indicate
 #'  which variables become active at each iteration (see the paper below for more information).}
 #'  \item{\code{sdev}}{Standard deviations of the new features.}
-#'  \item{\code{ncsup}}{How many supervised components was extracted (the rest are computed 
+#'  \item{\code{ncsup}}{How many supervised components were extracted (the rest are computed 
 #'  in an unsupervised manner).}
 #'  \item{\code{centers}}{Mean values for the original variables.}
 #'  \item{\code{scales}}{Scales of the original variables.}
@@ -53,22 +53,23 @@
 #' 
 #' @section References:
 #' 
-#' Piironen, Juho and Vehtari, Aki (2018). Iterative supervised principal components.
+#' Piironen, J. and Vehtari, A. (2018). Iterative supervised principal components.
 #' To appear in \emph{Proceedings of the 21st International Conference on Artificial
 #' Intelligence and Statistics (AISTATS)}.
 #'
 #' @examples
 #' \donttest{
 #' ### 
-#' dr <- ispca(x,y, nctot=10)
+#' dr <- ispca(x,y, nctot=2)
+#' z <- predict(dr, x) # the latent features
 #' }
 #'
 
 #' @export
 ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thresh=NULL,
                   window=500, verbose=TRUE, min_score=1e-4, normalize=TRUE,
-                  center=TRUE, scale=TRUE, permtest=TRUE, permtest_type='max-marginal', perms=1000,
-                  alpha=0.01, method='svd', ...) {
+                  center=TRUE, scale=TRUE, permtest=TRUE, permtest_type='max-marginal', 
+                  alpha=0.01, perms=1000, method='svd', ...) {
   
   
   if (is.factor(y) && permtest_type!='marginal' && permtest_type!='max-marginal' )
@@ -121,7 +122,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
       if (permtest) {
         if (permtest_type == 'max-marginal') {
           
-          pval <- uniscore.test(x,y,exclude=exclude,perms=perms,test.max=T)
+          pval <- featscore.test(x,y,exclude=exclude,perms=perms,test.max=T)
           if (!any(pval < alpha)) {
             k <- k-1
             print(sprintf('SPC %d failed the max-marginal permutation test, so stopping supervised iteration.', k+1))
@@ -130,7 +131,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
           
         } else if (permtest_type == 'marginal') {
           
-          pval <- uniscore.test(x,y,exclude=exclude,perms=perms)
+          pval <- featscore.test(x,y,exclude=exclude,perms=perms)
           if (!any(pval < alpha)) {
             k <- k-1
             print(sprintf('SPC %d failed the marginal permutation test, so stopping supervised iteration.', k+1))
