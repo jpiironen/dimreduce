@@ -8,13 +8,14 @@ I will add a vignette in the near future but below are some simple examples abou
 
 Installation
 ------------
-  
+
+```R  
 if (!require(devtools)) {
   install.packages("devtools")
   library(devtools)
 }
 devtools::install_github('stan-dev/dimreduce')
-
+```
 
 Example
 -------
