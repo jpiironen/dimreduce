@@ -8,7 +8,8 @@
 #' 
 #' @param x The original feature matrix, columns denoting the features and rows the instances.
 #' @param y A vector with the observed target values we try to predict using \code{x}.
-#' Can be factor for classification problems.
+#' Can be factor for classification problems. If missing, then this function computes
+#' standard unsupervised principal components.
 #' @param nctot Total number of latent features to extract.
 #' @param ncsup Maximum number of latent features to extract that use supervision.
 #' @param exclude Columns (variables) in x to ignore when extrating the new features.
