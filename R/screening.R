@@ -80,10 +80,8 @@ featscore <- function(x, y, type='pearson', exclude=NULL) {
   ok <- rep(TRUE, ncol(x))
   ok[exclude] <- FALSE
   
-  # if (normalize) {
-  #   x <- scale(x)
-  #   y <- scale(y)
-  # }
+  # zero score for those x that have variance zero
+  ok[apply(x,2,var)==0] <- FALSE
   
   score <- matrix(0, nrow=ncol(x), ncol=ncol(y))
   
@@ -118,7 +116,7 @@ featscore.test <- function(x,y, type='pearson', exclude=NULL, test.max=FALSE, pe
   # compute the scores with permuted y
   if (is.factor(y)) {
     # factors need to be handled separately to make the computation efficient
-    classes <- levels(y)
+    classes <- unique(yperm[,1])
     s_perm <- 0
     for (c in classes) {
       s_perm <- pmax(featscore(x, yperm==c, exclude=exclude, type=type),
