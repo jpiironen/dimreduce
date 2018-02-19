@@ -70,6 +70,9 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
     # those variables which have score above a certain threshold
     subsets <- lapply(thresh, function(th) cand[scores[cand] >= th*max_score] )
   }
+  #######
+  # ssize <- sapply(thresh, function(th) length(cand[which(scores[cand] >= th*max_score)]) )
+  #######
   
   pcas <- lapply(subsets, function(ind) {
     
