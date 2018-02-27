@@ -12,7 +12,8 @@ spca(x, y = NULL, nctot = NULL, ncsup = NULL, exclude = NULL,
 \item{x}{The original feature matrix, columns denoting the features and rows the instances.}
 
 \item{y}{A vector with the observed target values we try to predict using \code{x}.
-Can be factor for classification problems.}
+Can be factor for classification problems. If missing, then this function computes
+standard unsupervised principal components.}
 
 \item{nctot}{Total number of latent features to extract.}
 

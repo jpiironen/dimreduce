@@ -42,7 +42,7 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
   if (is.null(thresh)) {
     if (is.null(nthresh))
       nthresh <- 10
-    thresh <- seq(0, 0.999, len=nthresh)
+    thresh <- seq(0, 1, len=nthresh)
   }
   
   if (any(thresh > 1 | thresh < 0))
@@ -64,15 +64,14 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
   
   if (length(thresh) > ncand) {
     # more thresholds than variables, so loop through all subset sizes
-    # subsets <- lapply(1:ncand, function(k) cand[k:ncand] )
     subsets <- lapply(1:ncand, function(k) cand[1:k] )
   } else {
     # those variables which have score above a certain threshold
-    subsets <- lapply(thresh, function(th) cand[scores[cand] >= th*max_score] )
+    upper <- max(scores[cand])
+    lower <- min(scores[cand])
+    subsets <- lapply((upper-lower)*thresh + lower, 
+                      function(th) cand[scores[cand] >= th] )
   }
-  #######
-  # ssize <- sapply(thresh, function(th) length(cand[which(scores[cand] >= th*max_score)]) )
-  #######
   
   pcas <- lapply(subsets, function(ind) {
     
@@ -126,3 +125,32 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
       return(pcas)
   }
 }
+
+
+
+coeff.transform.dimred <- function(model, beta, alpha) {
+  # transform linear regression coefficients from the z-space to 
+  # the original x-space
+  beta_x <- (dr$w %*% beta)/dr$scales
+  alpha_x <- alpha - colSums(dr$centers*beta_x)
+  return(list(beta=beta_x, alpha=alpha_x))
+}
+
+
+
+predict.dimred <- function(model, xnew) {
+  # map xnew to the latent variable space znew
+  d <- length(model$scales)
+  if (is.vector(xnew))
+    xnew <- matrix(xnew, ncol=d)
+  
+  ok <- setdiff(1:d, model$exclude)
+  xnew_standard <- t((t(xnew[,ok,drop=F])-model$centers[ok]) / model$scales[ok])
+  return(xnew_standard %*% model$w[ok,,drop=F])
+} 
+
+
+
+
+
+

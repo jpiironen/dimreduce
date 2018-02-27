@@ -203,15 +203,19 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL,
 
 #' @export
 predict.spca <- function(model, xnew) {
-  # map xnew to the latent variable space znew
-  d <- length(model$scales)
-  if (is.vector(xnew))
-    xnew <- matrix(xnew, ncol=d)
-  
-  ok <- setdiff(1:d, model$exclude)
-  xnew_standard <- t((t(xnew[,ok,drop=F])-model$centers[ok]) / model$scales[ok])
-  return(xnew_standard %*% model$w[ok,,drop=F])
+  predict.dimred(model, xnew)
 }
+
+#' @export 
+coeff.transform.spca <- function(model, beta, alpha) {
+  coeff.transform.dimred(model, beta, alpha)
+}
+
+
+
+
+
+
 
 
 
