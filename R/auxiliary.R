@@ -42,7 +42,7 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
   if (is.null(thresh)) {
     if (is.null(nthresh))
       nthresh <- 10
-    thresh <- seq(0, 0.999, len=nthresh)
+    thresh <- seq(0, 1, len=nthresh)
   }
   
   if (any(thresh > 1 | thresh < 0))
@@ -64,15 +64,14 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
   
   if (length(thresh) > ncand) {
     # more thresholds than variables, so loop through all subset sizes
-    # subsets <- lapply(1:ncand, function(k) cand[k:ncand] )
     subsets <- lapply(1:ncand, function(k) cand[1:k] )
   } else {
     # those variables which have score above a certain threshold
-    subsets <- lapply(thresh, function(th) cand[scores[cand] >= th*max_score] )
+    upper <- max(scores[cand])
+    lower <- min(scores[cand])
+    subsets <- lapply((upper-lower)*thresh + lower, 
+                      function(th) cand[scores[cand] >= th] )
   }
-  #######
-  # ssize <- sapply(thresh, function(th) length(cand[which(scores[cand] >= th*max_score)]) )
-  #######
   
   pcas <- lapply(subsets, function(ind) {
     
