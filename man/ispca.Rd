@@ -7,7 +7,7 @@
 ispca(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NULL,
   thresh = NULL, window = 500, verbose = TRUE, min_score = 1e-04,
   normalize = TRUE, center = TRUE, scale = TRUE, permtest = TRUE,
-  permtest_type = "max-marginal", alpha = 0.01, perms = 1000,
+  permtest_type = "max-marginal", alpha = 0.1, perms = 500,
   method = "svd", ...)
 }
 \arguments{
@@ -85,8 +85,8 @@ algorithm.
 
 
 Piironen, J. and Vehtari, A. (2018). Iterative supervised principal components.
-To appear in \emph{Proceedings of the 21st International Conference on Artificial
-Intelligence and Statistics (AISTATS)}.
+In \emph{Proceedings of the 21st International Conference on Artificial
+Intelligence and Statistics (AISTATS) PMLR 84: 106-114}.
 }
 
 \examples{
