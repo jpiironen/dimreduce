@@ -32,7 +32,7 @@
 #' \emph{Feature Extraction, Foundations and Applications}, pages 265-296. Springer.
 #' 
 #' Piironen, Juho and Vehtari, Aki (2018). Iterative supervised principal components.
-#' To appear in \emph{Proceedings of the 21st International Conference on Artificial
-#' Intelligence and Statistics (AISTATS)}.
+#' In \emph{Proceedings of the 21st International Conference on Artificial
+#' Intelligence and Statistics (AISTATS) PMLR 84: 106-114}.
 #' 
 NULL
