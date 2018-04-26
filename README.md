@@ -51,8 +51,8 @@ Bair, E., Hastie, T., Paul, D., and Tibshirani, R. (2006). Prediction by supervi
 
 Neal, R. and Zhang, J. (2006). High dimensional classification with Bayesian neural networks and Dirichlet diffusion trees. In Guyon, I., Gunn, S., Nikravesh, M., and Zadeh, L. A., editors, *Feature Extraction, Foundations and Applications*, pages 265-296. Springer.
 
-Piironen, J. and Vehtari, A. (2018). Iterative supervised principal components. To appear in *Proceedings of the 21st International Conference on Artificial Intelligence and Statistics (AISTATS)*. ([Preprint][piironenvehtari18])
+Piironen, J. and Vehtari, A. (2018). Iterative supervised principal components. In *Proceedings of the 21st International Conference on Artificial Intelligence and Statistics (AISTATS)*, PMLR 84: 106-114. ([Online][piironenvehtari18])
 
 
-[piironenvehtari18]: https://arxiv.org/abs/1710.06229
+[piironenvehtari18]: http://proceedings.mlr.press/v84/piironen18a.html
 
