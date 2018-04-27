@@ -53,8 +53,8 @@
 #' of the American Statistical Association}, 101(473):119-137.
 #' 
 #' Piironen, J. and Vehtari, A. (2018). Iterative supervised principal components.
-#' To appear in \emph{Proceedings of the 21st International Conference on Artificial
-#' Intelligence and Statistics (AISTATS)}.
+#' In \emph{Proceedings of the 21st International Conference on Artificial
+#' Intelligence and Statistics (AISTATS) PMLR 84: 106-114}.
 #'
 #' @examples
 #' \donttest{
