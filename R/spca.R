@@ -20,6 +20,10 @@
 #' @param alpha Significance level for the p-values of the univariate scores used to determine
 #'  which features survive the screening and are used to compute the supervised components.
 #' @param perms Number of permutations to estimate the p-values for univariate scores.
+#' @param nfeat Number of features to retain in the screening step. If this option is used, then
+#' the algorithm does not perform the permutation tests for the p-values, but instead computes the 
+#' supervised components from those features that have their univariate score among the \code{nfeat} 
+#' highest scores (in this case \code{perms} and \code{alpha} are ignored).
 #' @param ... Currently ignored.
 #'
 #'
@@ -67,15 +71,19 @@
 #' @export
 spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, 
                  exclude=NULL, verbose=TRUE, normalize=TRUE,
-                 preprocess=TRUE, alpha=NULL, perms=1000, ...) {
+                 preprocess=TRUE, alpha=NULL, perms=1000, nfeat=NULL, ...) {
   
   n <- NROW(x)
   d <- NCOL(x)
   
   if (is.null(alpha))
     alpha <- 0.001
-  if (is.null(nctot))
-    nctot <- min(n-1,d)
+  if (is.null(nctot)) {
+    if (!is.null(nfeat))
+      nctot <- nfeat
+    else 
+      nctot <- min(n-1,d)
+  }
   else if (nctot > min(n-1,d))
     stop('nctot cannot exceed min(n-1,d)')
   if (is.null(ncsup))
@@ -118,11 +126,17 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL,
     if (verbose)
       print('Performing permutation tests for the marginal scores..')
     
-    # permutation test for the marginal scores, find out subset for the supervised PCs
-    pval <- featscore.test(x,y, exclude=exclude, perms=perms)
-    indsup <- pval < alpha
+    if (!is.null(nfeat)) {
+      # screen out all except those among nfeat most relevant (based on the univariate scores)
+      scores <- featscore(x,y, exclude=exclude)
+      indsup <- order(scores, decreasing = T)[1:nfeat]
+    } else {
+      # permutation test for the marginal scores, find out subset for the supervised PCs
+      pval <- featscore.test(x,y, exclude=exclude, perms=perms)
+      indsup <- which(pval < alpha)
+    }
     
-    if (any(indsup)) {
+    if (length(indsup) > 0) {
       
       if (verbose)
         print('Computing the supervised principal components..')
@@ -140,12 +154,9 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL,
       for (k in 1:ncsup) {
         
         z <- latent[,k]
-        v <- v_all[,k]
         b <- rep(0, d)
         b[ok] <- colSums(x[,ok,drop=F] * z) / sum(z^2)
         x <- x - t(t(matrix(z, nrow=n, ncol=d)) * b)
-        
-        # v_all[,k] <- v
         b_all[,k] <- b
       }
     } else {
