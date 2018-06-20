@@ -6,7 +6,7 @@
 \usage{
 spca(x, y = NULL, nctot = NULL, ncsup = NULL, exclude = NULL,
   verbose = TRUE, normalize = TRUE, preprocess = TRUE, alpha = NULL,
-  perms = 1000, ...)
+  perms = 1000, nfeat = NULL, ...)
 }
 \arguments{
 \item{x}{The original feature matrix, columns denoting the features and rows the instances.}
@@ -32,6 +32,11 @@ of one.}
 which features survive the screening and are used to compute the supervised components.}
 
 \item{perms}{Number of permutations to estimate the p-values for univariate scores.}
+
+\item{nfeat}{Number of features to retain in the screening step. If this option is used, then
+the algorithm does not perform the permutation tests for the p-values, but instead computes the 
+supervised components from those features that have their univariate score among the \code{nfeat} 
+highest scores (in this case \code{perms} and \code{alpha} are ignored).}
 
 \item{...}{Currently ignored.}
 }
