@@ -20,6 +20,11 @@
 #' @param alpha Significance level for the p-values of the univariate scores used to determine
 #'  which features survive the screening and are used to compute the supervised components.
 #' @param perms Number of permutations to estimate the p-values for univariate scores.
+#' @param screenthresh Value between 0 and 1 (or NULL). If not NULL, then no permutation tests are
+#' run, and the supervised components
+#' are computed among those features that have their univariate score equal or larger than this. 
+#' Value 1 means that only the feature with the highest score survives the screening, whereas value 0 means that
+#' the top \code{min(window, ncol(x))} survive the screening. Overwrites also \code{nfeat}-argument.
 #' @param nfeat Number of features to retain in the screening step. If this option is used, then
 #' the algorithm does not perform the permutation tests for the p-values, but instead computes the 
 #' supervised components from those features that have their univariate score among the \code{nfeat} 
@@ -69,12 +74,23 @@
 #'
 
 #' @export
-spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, 
+spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
                  exclude=NULL, verbose=TRUE, normalize=TRUE,
-                 preprocess=TRUE, alpha=NULL, perms=1000, nfeat=NULL, ...) {
+                 preprocess=TRUE, alpha=NULL, perms=1000, 
+                 screenthresh=NULL, nfeat=NULL, ...) {
   
   n <- NROW(x)
   d <- NCOL(x)
+  
+  if (!is.null(screenthresh)) {
+    # a relative screening threshold given, so find out what is the number of features this
+    # threshold corresponds to
+    scores <- featscore(x,y,exclude=exclude)
+    scores_sorted <- sort(scores, decreasing=T)
+    smax <- scores_sorted[1]
+    smin <- scores_sorted[min(length(scores),window)]
+    nfeat <- sum(scores >= smin + screenthresh*(smax - smin)) 
+  }
   
   if (is.null(alpha))
     alpha <- 0.001
@@ -101,7 +117,6 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL,
     centers <- rep(0,d)
     scales <- rep(1,d)
   }
-  
   
   # check if there are NA/NaNs in some columns, exclude those
   exclude <- c( exclude, which(is.na(colSums(x))) )
@@ -134,6 +149,11 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL,
       # permutation test for the marginal scores, find out subset for the supervised PCs
       pval <- featscore.test(x,y, exclude=exclude, perms=perms)
       indsup <- which(pval < alpha)
+      if (length(indsup) > window) {
+        # more than window significant features, so choose only the window most relevant ones
+        scores <- featscore(x,y,exclude=exclude)
+        indsup <- order(scores, decreasing = T)[1:window]
+      }
     }
     
     if (length(indsup) > 0) {
