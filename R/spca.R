@@ -75,7 +75,7 @@
 
 #' @export
 spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
-                 exclude=NULL, verbose=TRUE, normalize=TRUE,
+                 exclude=NULL, verbose=TRUE, normalize=FALSE,
                  preprocess=TRUE, alpha=NULL, perms=1000, 
                  screenthresh=NULL, nfeat=NULL, ...) {
   
