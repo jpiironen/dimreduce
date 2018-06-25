@@ -4,9 +4,9 @@
 \alias{spca}
 \title{Supervised (and unsupervised) principal components}
 \usage{
-spca(x, y = NULL, nctot = NULL, ncsup = NULL, exclude = NULL,
-  verbose = TRUE, normalize = TRUE, preprocess = TRUE, alpha = NULL,
-  perms = 1000, nfeat = NULL, ...)
+spca(x, y = NULL, nctot = NULL, ncsup = NULL, window = 500,
+  exclude = NULL, verbose = TRUE, normalize = TRUE, preprocess = TRUE,
+  alpha = NULL, perms = 1000, screenthresh = NULL, nfeat = NULL, ...)
 }
 \arguments{
 \item{x}{The original feature matrix, columns denoting the features and rows the instances.}
@@ -32,6 +32,12 @@ of one.}
 which features survive the screening and are used to compute the supervised components.}
 
 \item{perms}{Number of permutations to estimate the p-values for univariate scores.}
+
+\item{screenthresh}{Value between 0 and 1 (or NULL). If not NULL, then no permutation tests are
+run, and the supervised components
+are computed among those features that have their univariate score equal or larger than this. 
+Value 1 means that only the feature with the highest score survives the screening, whereas value 0 means that
+the top \code{min(window, ncol(x))} survive the screening. Overwrites also \code{nfeat}-argument.}
 
 \item{nfeat}{Number of features to retain in the screening step. If this option is used, then
 the algorithm does not perform the permutation tests for the p-values, but instead computes the 
