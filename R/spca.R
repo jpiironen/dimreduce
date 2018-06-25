@@ -80,7 +80,7 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL,
     alpha <- 0.001
   if (is.null(nctot)) {
     if (!is.null(nfeat))
-      nctot <- nfeat
+      nctot <- min(nfeat, min(n-1,d))
     else 
       nctot <- min(n-1,d)
   }
