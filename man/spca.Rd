@@ -5,8 +5,9 @@
 \title{Supervised (and unsupervised) principal components}
 \usage{
 spca(x, y = NULL, nctot = NULL, ncsup = NULL, window = 500,
-  exclude = NULL, verbose = TRUE, normalize = TRUE, preprocess = TRUE,
-  alpha = NULL, perms = 1000, screenthresh = NULL, nfeat = NULL, ...)
+  exclude = NULL, verbose = TRUE, normalize = FALSE, preprocess = TRUE,
+  alpha = NULL, perms = 1000, screenthresh = NULL, nfeat = NULL,
+  sup.only = FALSE, ...)
 }
 \arguments{
 \item{x}{The original feature matrix, columns denoting the features and rows the instances.}
@@ -17,9 +18,15 @@ standard unsupervised principal components.}
 
 \item{nctot}{Total number of latent features to extract.}
 
-\item{ncsup}{Maximum number of latent features to extract that use supervision.}
+\item{ncsup}{Maximum number of latent features to extract that use supervision.
+If \code{nctot > ncsup}, then the remaining \code{nctot-ncsup} features are computed in
+unsupervised manner (or ignored if \code{sup.only=TRUE}).}
 
-\item{exclude}{Columns (variables) in x to ignore when extrating the new features.}
+\item{window}{Maximum number of features that will survive the screening and from which
+the supervised components are computed. Affects also how the \code{screenthresh}-argument
+is interpreted.}
+
+\item{exclude}{Columns (variables) in \code{x} to ignore when extrating the new features.}
 
 \item{verbose}{Whether to print some messages along the way.}
 
@@ -33,7 +40,7 @@ which features survive the screening and are used to compute the supervised comp
 
 \item{perms}{Number of permutations to estimate the p-values for univariate scores.}
 
-\item{screenthresh}{Value between 0 and 1 (or NULL). If not NULL, then no permutation tests are
+\item{screenthresh}{Value between 0 and 1 (or \code{NULL}). If not \code{NULL}, then no permutation tests are
 run, and the supervised components
 are computed among those features that have their univariate score equal or larger than this. 
 Value 1 means that only the feature with the highest score survives the screening, whereas value 0 means that
@@ -43,6 +50,9 @@ the top \code{min(window, ncol(x))} survive the screening. Overwrites also \code
 the algorithm does not perform the permutation tests for the p-values, but instead computes the 
 supervised components from those features that have their univariate score among the \code{nfeat} 
 highest scores (in this case \code{perms} and \code{alpha} are ignored).}
+
+\item{sup.only}{If \code{TRUE}, then no unsupervised components are ever computed even if the number of
+supervised components that could be extracted was less than \code{nctot}.}
 
 \item{...}{Currently ignored.}
 }

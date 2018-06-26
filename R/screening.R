@@ -17,8 +17,6 @@
 #' @param test.max If TRUE, compute the p-value for the maximum of the univariate scores.
 #' If FALSE (default), compute p-values separately for each feature.
 #' @param perms Number of random permutations to estimate the p-values for univariate scores.
-#' @param normalize Whether to normalize the features before computation. For internal usage only
-#' to avoid repeated computations.
 #' @param ... Currently ignored.
 #'
 #'
@@ -51,8 +49,6 @@ NULL
 #' @rdname featscores
 #' @export
 featscore <- function(x, y, type='pearson', exclude=NULL) {
-  
-  # if (is.null(normalize) && type %in% c('pearson','kendall','spearman'))
   
   if (is.vector(x))
     x <- matrix(x, ncol=1)
