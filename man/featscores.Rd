@@ -28,9 +28,6 @@ If FALSE (default), compute p-values separately for each feature.}
 
 \item{perms}{Number of random permutations to estimate the p-values for univariate scores.}
 
-\item{normalize}{Whether to normalize the features before computation. For internal usage only
-to avoid repeated computations.}
-
 \item{...}{Currently ignored.}
 }
 \value{

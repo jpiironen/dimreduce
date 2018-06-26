@@ -14,7 +14,10 @@
 #' @param ncsup Maximum number of latent features to extract that use supervision.
 #' If \code{nctot > ncsup}, then the remaining \code{nctot-ncsup} features are computed in
 #' unsupervised manner (or ignored if \code{sup.only=TRUE}).
-#' @param exclude Columns (variables) in x to ignore when extrating the new features.
+#' @param window Maximum number of features that will survive the screening and from which
+#' the supervised components are computed. Affects also how the \code{screenthresh}-argument
+#' is interpreted.
+#' @param exclude Columns (variables) in \code{x} to ignore when extrating the new features.
 #' @param verbose Whether to print some messages along the way. 
 #' @param normalize Whether to scale the extracted features so that they all have standard deviation
 #'  of one.
