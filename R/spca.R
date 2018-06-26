@@ -12,6 +12,8 @@
 #' standard unsupervised principal components.
 #' @param nctot Total number of latent features to extract.
 #' @param ncsup Maximum number of latent features to extract that use supervision.
+#' If \code{nctot > ncsup}, then the remaining \code{nctot-ncsup} features are computed in
+#' unsupervised manner (or ignored if \code{sup.only=TRUE}).
 #' @param exclude Columns (variables) in x to ignore when extrating the new features.
 #' @param verbose Whether to print some messages along the way. 
 #' @param normalize Whether to scale the extracted features so that they all have standard deviation
@@ -20,7 +22,7 @@
 #' @param alpha Significance level for the p-values of the univariate scores used to determine
 #'  which features survive the screening and are used to compute the supervised components.
 #' @param perms Number of permutations to estimate the p-values for univariate scores.
-#' @param screenthresh Value between 0 and 1 (or NULL). If not NULL, then no permutation tests are
+#' @param screenthresh Value between 0 and 1 (or \code{NULL}). If not \code{NULL}, then no permutation tests are
 #' run, and the supervised components
 #' are computed among those features that have their univariate score equal or larger than this. 
 #' Value 1 means that only the feature with the highest score survives the screening, whereas value 0 means that
@@ -29,6 +31,8 @@
 #' the algorithm does not perform the permutation tests for the p-values, but instead computes the 
 #' supervised components from those features that have their univariate score among the \code{nfeat} 
 #' highest scores (in this case \code{perms} and \code{alpha} are ignored).
+#' @param sup.only If \code{TRUE}, then no unsupervised components are ever computed even if the number of
+#' supervised components that could be extracted was less than \code{nctot}.
 #' @param ... Currently ignored.
 #'
 #'
@@ -77,7 +81,7 @@
 spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
                  exclude=NULL, verbose=TRUE, normalize=FALSE,
                  preprocess=TRUE, alpha=NULL, perms=1000, 
-                 screenthresh=NULL, nfeat=NULL, ...) {
+                 screenthresh=NULL, nfeat=NULL, sup.only=FALSE, ...) {
   
   n <- NROW(x)
   d <- NCOL(x)
@@ -187,29 +191,38 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
   
   rotation <- v_all
   
-  if (ncsup < nctot) {
-    
-    if (verbose)
-      print('Computing the unsupervised principal components..')
-    
-    # compute standard pc with the rest of the data variation
-    if (length(ok) < nctot-ncsup)
-      nctot <- length(ok)-ncsup # how many unsupervised PCs we can compute
-    pcs <- prcomp(x[,ok], center=F, scale.=F)
-    v_all[ok,(ncsup+1):nctot] <- pcs$rotation[, 1:(nctot-ncsup)]
-    latent[,(ncsup+1):nctot] <- pcs$x[, 1:(nctot-ncsup)]
-    
-    # compute the rotation matrix from vs
-    # v <- v_all # store the original vs
-    rotation <- v_all
-    if (ncsup > 0 && nctot > 1) {
-      for (j in seq(nctot, ncsup+1)) {
-        for (h in seq(ncsup, 1))
-          rotation[,j] <- rotation[,j] - sum(b_all[,h]*rotation[,j])*v_all[,h]
+  if (!sup.only) {
+    if (ncsup < nctot) {
+      
+      if (verbose)
+        print('Computing the unsupervised principal components..')
+      
+      # compute standard pc with the rest of the data variation
+      if (length(ok) < nctot-ncsup)
+        nctot <- length(ok)-ncsup # how many unsupervised PCs we can compute
+      pcs <- prcomp(x[,ok], center=F, scale.=F)
+      v_all[ok,(ncsup+1):nctot] <- pcs$rotation[, 1:(nctot-ncsup)]
+      latent[,(ncsup+1):nctot] <- pcs$x[, 1:(nctot-ncsup)]
+      
+      # compute the rotation matrix from vs
+      # v <- v_all # store the original vs
+      rotation <- v_all
+      if (ncsup > 0 && nctot > 1) {
+        for (j in seq(nctot, ncsup+1)) {
+          for (h in seq(ncsup, 1))
+            rotation[,j] <- rotation[,j] - sum(b_all[,h]*rotation[,j])*v_all[,h]
+        }
       }
     }
+  } else {
+    # remove the NA-columns from the matrices that will be returned
+    if (nctot > ncsup) {
+      v_all <- v_all[,1:ncsup,drop=F]
+      b_all <- b_all[,1:ncsup,drop=F]
+      latent <- latent[,1:ncsup,drop=F]
+      rotation <- rotation[,1:ncsup,drop=F]
+    }
   }
-  
   
   if (normalize) {
     sz <- apply(latent,2,'sd')
