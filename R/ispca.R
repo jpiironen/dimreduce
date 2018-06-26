@@ -259,13 +259,13 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
 
 
 #' @export
-predict.ispca <- function(model, xnew) {
-  predict.dimred(model, xnew)
+predict.ispca <- function(object, xnew, ...) {
+  predict.dimred(object, xnew)
 }
 
 #' @export 
-coeff.transform.ispca <- function(model, beta, alpha) {
-  coeff.transform.dimred(model, beta, alpha)
+coeff.transform.ispca <- function(object, beta, alpha, ...) {
+  coeff.transform.dimred(object, beta, alpha)
 }
 
 

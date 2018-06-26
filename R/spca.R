@@ -246,13 +246,13 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
 
 
 #' @export
-predict.spca <- function(model, xnew) {
-  predict.dimred(model, xnew)
+predict.spca <- function(object, xnew, ...) {
+  predict.dimred(object, xnew)
 }
 
 #' @export 
-coeff.transform.spca <- function(model, beta, alpha) {
-  coeff.transform.dimred(model, beta, alpha)
+coeff.transform.spca <- function(object, beta, alpha, ...) {
+  coeff.transform.dimred(object, beta, alpha)
 }
 
 

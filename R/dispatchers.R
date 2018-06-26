@@ -2,8 +2,8 @@
 
 
 #' @export
-coeff.transform <- function (obj, ...) {
-  UseMethod("coeff.transform", obj)
+coeff.transform <- function (object, ...) {
+  UseMethod("coeff.transform", object)
 }
 
 
