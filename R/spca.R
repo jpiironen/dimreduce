@@ -152,6 +152,7 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
       # screen out all except those among nfeat most relevant (based on the univariate scores)
       scores <- featscore(x,y, exclude=exclude)
       indsup <- order(scores, decreasing = T)[1:nfeat]
+      indsup <- setdiff(indsup, exclude)
     } else {
       # permutation test for the marginal scores, find out subset for the supervised PCs
       pval <- featscore.test(x,y, exclude=exclude, perms=perms)
