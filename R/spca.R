@@ -145,9 +145,6 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
   
   if (ncsup > 0) {
     
-    if (verbose)
-      print('Performing permutation tests for the marginal scores..')
-    
     if (!is.null(nfeat)) {
       # screen out all except those among nfeat most relevant (based on the univariate scores)
       scores <- featscore(x,y, exclude=exclude)
@@ -155,6 +152,8 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
       indsup <- setdiff(indsup, exclude)
     } else {
       # permutation test for the marginal scores, find out subset for the supervised PCs
+      if (verbose)
+        print('Performing permutation tests for the marginal scores..')
       pval <- featscore.test(x,y, exclude=exclude, perms=perms)
       indsup <- which(pval < alpha)
       if (length(indsup) > window) {
