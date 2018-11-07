@@ -131,8 +131,8 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
 coeff.transform.dimred <- function(model, beta, alpha) {
   # transform linear regression coefficients from the z-space to 
   # the original x-space
-  beta_x <- (dr$w %*% beta)/dr$scales
-  alpha_x <- alpha - colSums(dr$centers*beta_x)
+  beta_x <- (model$w %*% beta)/model$scales
+  alpha_x <- alpha - colSums(model$centers*beta_x)
   return(list(beta=beta_x, alpha=alpha_x))
 }
 

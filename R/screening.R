@@ -17,7 +17,8 @@
 #' @param test.max If TRUE, compute the p-value for the maximum of the univariate scores.
 #' If FALSE (default), compute p-values separately for each feature.
 #' @param perms Number of random permutations to estimate the p-values for univariate scores.
-#' @param ... Currently ignored.
+#' @param ... Further arguments passed to \code{cor} when \code{type} is one of the correlation
+#' scores.
 #'
 #'
 #' @return A vector giving the univariate scores for each feature.
@@ -48,7 +49,7 @@ NULL
 
 #' @rdname featscores
 #' @export
-featscore <- function(x, y, type='pearson', exclude=NULL) {
+featscore <- function(x, y, type='pearson', exclude=NULL, ...) {
   
   if (is.vector(x))
     x <- matrix(x, ncol=1)
@@ -83,7 +84,7 @@ featscore <- function(x, y, type='pearson', exclude=NULL) {
   
   if (type %in% c('pearson','kendall','spearman')) {
     # score[ok,] <- abs( t(x[,ok,drop=F]) %*% y )  / (nrow(y)-1)
-    score[ok,] <- abs(cor(x[,ok,drop=F], y, method=type))
+    score[ok,] <- abs(cor(x[,ok,drop=F], y, method=type, ...))
   } else if (type == 'runs') {
     score[ok,] <- runs.score(x[,ok,drop=F], y)
   } else
@@ -99,7 +100,7 @@ featscore <- function(x, y, type='pearson', exclude=NULL) {
 
 #' @rdname featscores
 #' @export
-featscore.test <- function(x,y, type='pearson', exclude=NULL, test.max=FALSE, perms=1000) {
+featscore.test <- function(x,y, type='pearson', exclude=NULL, test.max=FALSE, perms=1000, ...) {
   
   # permutations for y
   yperm <- matrix(0, nrow=length(y), ncol=perms)
@@ -107,7 +108,7 @@ featscore.test <- function(x,y, type='pearson', exclude=NULL, test.max=FALSE, pe
     yperm[,i] <- sample(y)
   
   # the actual score
-  s_actual <- featscore(x, y, exclude=exclude, type=type)
+  s_actual <- featscore(x, y, exclude=exclude, type=type, ...)
   
   # compute the scores with permuted y
   if (is.factor(y)) {
@@ -115,11 +116,11 @@ featscore.test <- function(x,y, type='pearson', exclude=NULL, test.max=FALSE, pe
     classes <- unique(yperm[,1])
     s_perm <- 0
     for (c in classes) {
-      s_perm <- pmax(featscore(x, yperm==c, exclude=exclude, type=type),
+      s_perm <- pmax(featscore(x, yperm==c, exclude=exclude, type=type, ...),
                      s_perm)
     }
   } else {
-    s_perm <- featscore(x,yperm,exclude=exclude, type=type)
+    s_perm <- featscore(x,yperm,exclude=exclude, type=type, ...)
   }
   
   if (test.max) {
