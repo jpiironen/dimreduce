@@ -35,7 +35,7 @@ power.pc <- function(x, maxiter=10000, tol=1e-4) {
 # Auxiliary function to compute supervised PCs (screening + PCA)
 #
 spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
-                 window=100, optim_only=TRUE, method='power', ...) {
+                 window=100, optim_only=TRUE, method='power', epsilon=1e-6, ...) {
   # workhorse for computing supervised PCs
   # thresh is relative to the largest score statistic
   
@@ -50,8 +50,10 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
   
   # compute the scores for each feature that are used for screening (thresholding)
   D <- NCOL(x)
+  xstd <- apply(x, 2, sd)
+  x[,xstd < epsilon] <- 0 # remove cols with very small variance for numerical stability
   scores <- featscore(x,y,exclude=exclude)
-  scores[scores < 1e-9] <- 0 # exclude very small scores for numerical stability
+  scores[scores < epsilon] <- 0 # exclude very small scores for numerical stability
   max_score <- max(scores)
   cand <- order(scores, decreasing = T)
   cand <- cand[1:sum(scores>0)] # only those x which have nonzero score
