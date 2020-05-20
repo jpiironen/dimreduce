@@ -50,8 +50,6 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
   
   # compute the scores for each feature that are used for screening (thresholding)
   D <- NCOL(x)
-  xstd <- apply(x, 2, sd)
-  x[,xstd < epsilon] <- 0 # remove cols with very small variance for numerical stability
   scores <- featscore(x,y,exclude=exclude)
   scores[scores < epsilon] <- 0 # exclude very small scores for numerical stability
   max_score <- max(scores)

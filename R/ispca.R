@@ -189,6 +189,12 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
       b[ok] <- colSums(x[,ok,drop=F] * z) / sum(z^2)
       x <- x - t(t(matrix(z, nrow=n, ncol=d)) * b)
       
+      # remove cols with very small variance for numerical stability
+      # this usually occurs when v contains only one feature
+      epsilon <- 1e-9
+      xstd <- apply(x, 2, sd)
+      x[,xstd < epsilon] <- 0 
+      
       v_all[,k] <- v
       b_all[,k] <- b
       
