@@ -79,35 +79,18 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
       stop('Something went wrong: the active set became empty after screening.')
     } else {
       if (method == 'power' && nc == 1) {
-        # use the power method which should be faster
+        # use the power method 
         pca <- power.pc(x[,ind,drop=F])
-        
-      } else if (method == 'robust') {
-        if (!requireNamespace("pcaPP", quietly = TRUE)) {
-          stop("You need package \"pcaPP\" to use method = \"robust\". Please install it.",
-               call. = FALSE)
-        }
-        if (length(ind)==1) {
-          pca$rotation <- 1
-          pca$x <- x[,ind,drop=F]
-          pca$sdev <- stats::sd(x[,ind])
-        } else {
-          pca <- pcaPP::PCAgrid(x[,ind,drop=F], k=nc)
-          pca$rotation <- pca$loadings; pca$loadings <- NULL
-          pca$x <- pca$scores; pca$scores <- NULL
-          if (NCOL(pca$loadings) > nc) {
-            pca$rotation <- pca$rotation[,1:nc,drop=F]
-            pca$x <- pca$x[,1:nc,drop=F]
-            pca$sdev <- pca$sdev[1:nc]
-          }
-        }
-      } else{
+      } else if (method == 'svd') {
+        # use svd method 
         pca <- stats::prcomp(x[,ind,drop=F], ...)
         if (NCOL(pca$rotation) > nc) {
           pca$rotation <- pca$rotation[,1:nc,drop=F]
           pca$x <- pca$x[,1:nc,drop=F]
           pca$sdev <- pca$sdev[1:nc]
         }
+      } else {
+        stop(paste0('Got an unknown method \'', method, '\'.'))
       }
       pca$ind <- ind
       v <- pca$rotation
