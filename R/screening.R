@@ -48,7 +48,7 @@ NULL
 
 #' @rdname featscores
 #' @export
-featscore <- function(x, y, type='pearson', exclude=NULL) {
+featscore <- function(x, y, type='pearson', exclude=NULL, ...) {
   
   if (is.vector(x))
     x <- matrix(x, ncol=1)
