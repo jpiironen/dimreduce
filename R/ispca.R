@@ -95,7 +95,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
   else
     centers <- rep(0,d)
   if (scale)
-    scales <- apply(x,2,'stats::sd')
+    scales <- apply(x,2,'sd')
   else
     scales <- rep(1,d)
   
@@ -245,7 +245,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
   
   if (normalize) {
     # scale the extracted features so that they have standard deviation of one
-    sz <- apply(latent,2,'stats::sd')
+    sz <- apply(latent,2,'sd')
     latent <- t(t(latent)/sz)
     rotation <- t(t(rotation)/sz)
   }
@@ -253,7 +253,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
   if (verbose)
     print('Done.')
   
-  res <- list(w=rotation, z=latent, v=v, sdev=apply(latent,2,'stats::sd'), 
+  res <- list(w=rotation, z=latent, v=v, sdev=apply(latent,2,'sd'), 
               ncsup=ncsup, centers=centers, scales=scales, exclude=exclude)
   
   class(res) <- 'ispca'
