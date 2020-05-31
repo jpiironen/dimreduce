@@ -93,8 +93,11 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
           pca$sdev <- stats::sd(x[,ind])
         } else {
           pca <- pcaPP::PCAgrid(x[,ind,drop=F], k=nc)
-          pca$rotation <- pca$loadings; pca$loadings <- NULL
-          pca$x <- pca$scores; pca$scores <- NULL
+          pca$rotation <- pca$loadings
+          pca$loadings <- NULL
+          pca$x <- pca$scores
+          pca$scores <- NULL
+          # TODO: this has a logical mistake since pca$loadings is already removed. Fix.
           if (NCOL(pca$loadings) > nc) {
             pca$rotation <- pca$rotation[,1:nc,drop=F]
             pca$x <- pca$x[,1:nc,drop=F]

@@ -71,8 +71,10 @@ supervised iteration.}
 
 \item{perms}{Number of permutations to estimate the p-values for univariate scores.}
 
-\item{method}{Method to compute the principal components. Either 'svd' or 'power'. Power can sometimes
-be slightly faster but in some cases can have very slow convergence.}
+\item{method}{Method to compute the principal components. Either 'svd' (default), 
+'power' or 'robust'. 'power' can sometimes
+be slightly faster than 'svd' but in some cases can have very slow convergence. 'robust' 
+uses robust PCA instead of the standard PCA (requires package pcaPP).}
 
 \item{...}{Currently ignored.}
 }
