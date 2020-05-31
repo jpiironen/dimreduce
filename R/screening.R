@@ -145,7 +145,7 @@ runs.score <- function(x, y) {
     x <- matrix(x)
   n <- nrow(y)
   
-  if (!is.integer(y)) {
+  if (!all(is.wholenumber(y))) {
     # bin the values of y into two; to those above median and to those below
     large <- apply(y, 2, function(yj) yj > stats::median(yj))
     y[large] <- 1
@@ -164,4 +164,10 @@ runs.score <- function(x, y) {
     count <- as.vector(count)
   return(count)
 }
+
+
+is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
+  abs(x - round(x)) < tol
+}
+
 
