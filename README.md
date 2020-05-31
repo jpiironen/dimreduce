@@ -26,6 +26,8 @@ library(ggplot2)
 
 # load the features x and target values y for the prostate cancer data
 data('prostate', package = 'dimreduce')
+x <- prostate$x
+y <- prostate$y
 
 # try the difference dimension reductions 
 dr0 <- spca(x) # pca
