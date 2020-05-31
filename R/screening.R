@@ -77,13 +77,12 @@ featscore <- function(x, y, type='pearson', exclude=NULL) {
   ok[exclude] <- FALSE
   
   # zero score for those x that have variance zero
-  ok[apply(x,2,var)==0] <- FALSE
+  ok[apply(x,2,stats::var)==0] <- FALSE
   
   score <- matrix(0, nrow=ncol(x), ncol=ncol(y))
   
   if (type %in% c('pearson','kendall','spearman')) {
-    # score[ok,] <- abs( t(x[,ok,drop=F]) %*% y )  / (nrow(y)-1)
-    score[ok,] <- abs(cor(x[,ok,drop=F], y, method=type))
+    score[ok,] <- abs(stats::cor(x[,ok,drop=F], y, method=type))
   } else if (type == 'runs') {
     score[ok,] <- runs.score(x[,ok,drop=F], y)
   } else
@@ -148,14 +147,14 @@ runs.score <- function(x, y) {
   
   if (!is.integer(y)) {
     # bin the values of y into two; to those above median and to those below
-    large <- apply(y, 2, function(yj) yj>median(yj))
+    large <- apply(y, 2, function(yj) yj > stats::median(yj))
     y[large] <- 1
     y[!large] <- 0
   }
   
   count <- matrix(0, nrow=ncol(x), ncol=ncol(y)) 
   for (j in 1:ncol(x)) {
-    ord <- order(x[,j], runif(n))
+    ord <- order(x[,j], stats::runif(n))
     ytemp <- y[ord,,drop=F]
     count[j,] <- colSums(ytemp[1:(n-1),,drop=F] == ytemp[2:n,,drop=F])
   }

@@ -5,4 +5,5 @@ Author: Juho Piironen
 Maintainer: Juho Piironen <juho.t.piironen@gmail.com>
 Description: Provides functions for dimension reduction, mainly for supervised learning. Contains also methods for screening features.
 License: GPL-3
-RoxygenNote: 6.0.1
+RoxygenNote: 7.0.2
+Suggests: pcaPP

@@ -170,7 +170,7 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
         print('Computing the supervised principal components..')
       
       # supervised PCs
-      spcs <- prcomp(x[, indsup], center=F, scale.=F)
+      spcs <- stats::prcomp(x[, indsup], center=F, scale.=F)
       
       if ( NCOL(spcs$rotation) < ncsup )
         ncsup <- NCOL(spcs$rotation)
@@ -204,7 +204,7 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
       # compute standard pc with the rest of the data variation
       if (length(ok) < nctot-ncsup)
         nctot <- length(ok)-ncsup # how many unsupervised PCs we can compute
-      pcs <- prcomp(x[,ok], center=F, scale.=F)
+      pcs <- stats::prcomp(x[,ok], center=F, scale.=F)
       v_all[ok,(ncsup+1):nctot] <- pcs$rotation[, 1:(nctot-ncsup)]
       latent[,(ncsup+1):nctot] <- pcs$x[, 1:(nctot-ncsup)]
       

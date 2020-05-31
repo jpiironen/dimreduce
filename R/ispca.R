@@ -95,7 +95,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
   else
     centers <- rep(0,d)
   if (scale)
-    scales <- apply(x,2,'sd')
+    scales <- apply(x,2,'stats::sd')
   else
     scales <- rep(1,d)
   
@@ -192,7 +192,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
       # remove cols with very small variance for numerical stability
       # this usually occurs when v contains only one feature
       epsilon <- 1e-9
-      xstd <- apply(x, 2, sd)
+      xstd <- apply(x, 2, stats::sd)
       x[,xstd < epsilon] <- 0 
       
       v_all[,k] <- v
@@ -228,7 +228,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
     print('Computing the unsupervised principal components..')
     if (length(ok) < nctot-ncsup)
       nctot <- length(ok)-ncsup # how many unsupervised PCs we can compute
-    temp <- prcomp(x[,ok], rank.=nctot-ncsup, center=F, scale.=F)
+    temp <- stats::prcomp(x[,ok], rank.=nctot-ncsup, center=F, scale.=F)
     v_all[ok,(ncsup+1):nctot] <- temp$rotation[, 1:(nctot-ncsup)]
     latent[,(ncsup+1):nctot] <- temp$x[, 1:(nctot-ncsup)]
   }
@@ -245,7 +245,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
   
   if (normalize) {
     # scale the extracted features so that they have standard deviation of one
-    sz <- apply(latent,2,'sd')
+    sz <- apply(latent,2,'stats::sd')
     latent <- t(t(latent)/sz)
     rotation <- t(t(rotation)/sz)
   }
@@ -253,7 +253,7 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
   if (verbose)
     print('Done.')
   
-  res <- list(w=rotation, z=latent, v=v, sdev=apply(latent,2,'sd'), 
+  res <- list(w=rotation, z=latent, v=v, sdev=apply(latent,2,'stats::sd'), 
               ncsup=ncsup, centers=centers, scales=scales, exclude=exclude)
   
   class(res) <- 'ispca'

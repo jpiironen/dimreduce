@@ -14,7 +14,7 @@ power.pc <- function(x, maxiter=10000, tol=1e-4) {
   if (d == 1) {
     v <- 1
   } else {
-    vprev <- rnorm(d)
+    vprev <- stats::rnorm(d)
     for (i in 1:maxiter) {
       v <- t(x) %*% (x %*% vprev)
       v <- v / sqrt(sum(v * v))
@@ -83,13 +83,16 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
         pca <- power.pc(x[,ind,drop=F])
         
       } else if (method == 'robust') {
-        
+        if (!requireNamespace("pcaPP", quietly = TRUE)) {
+          stop("You need package \"pcaPP\" to use method = \"robust\". Please install it.",
+               call. = FALSE)
+        }
         if (length(ind)==1) {
           pca$rotation <- 1
           pca$x <- x[,ind,drop=F]
-          pca$sdev <- sd(x[,ind])
+          pca$sdev <- stats::sd(x[,ind])
         } else {
-          pca <- PCAgrid(x[,ind,drop=F], k=nc)
+          pca <- pcaPP::PCAgrid(x[,ind,drop=F], k=nc)
           pca$rotation <- pca$loadings; pca$loadings <- NULL
           pca$x <- pca$scores; pca$scores <- NULL
           if (NCOL(pca$loadings) > nc) {
@@ -99,7 +102,7 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
           }
         }
       } else{
-        pca <- prcomp(x[,ind,drop=F], ...)
+        pca <- stats::prcomp(x[,ind,drop=F], ...)
         if (NCOL(pca$rotation) > nc) {
           pca$rotation <- pca$rotation[,1:nc,drop=F]
           pca$x <- pca$x[,1:nc,drop=F]
@@ -128,11 +131,11 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
 
 
 
-coeff.transform.dimred <- function(model, beta, alpha) {
+coeff.transform.dimred <- function(object, beta, alpha) {
   # transform linear regression coefficients from the z-space to 
   # the original x-space
-  beta_x <- (dr$w %*% beta)/dr$scales
-  alpha_x <- alpha - colSums(dr$centers*beta_x)
+  beta_x <- (object$w %*% beta)/object$scales
+  alpha_x <- alpha - colSums(object$centers*beta_x)
   return(list(beta=beta_x, alpha=alpha_x))
 }
 
