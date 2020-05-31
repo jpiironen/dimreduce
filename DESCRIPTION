@@ -1,9 +1,12 @@
 Package: dimreduce
-Title: Supervised dimension reduction 
+Title: Supervised Dimension Reduction 
 Version: 0.1.5
 Author: Juho Piironen
 Maintainer: Juho Piironen <juho.t.piironen@gmail.com>
-Description: Provides functions for dimension reduction, mainly for supervised learning. Contains also methods for screening features.
+Depends: R (>= 3.5.0)
+Description: 
+    Provides functions for dimension reduction, mainly for supervised learning. 
+    Contains also methods for screening features.
 License: GPL-3
 RoxygenNote: 7.0.2
-Suggests: pcaPP
+
