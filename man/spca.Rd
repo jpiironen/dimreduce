@@ -116,6 +116,13 @@ Intelligence and Statistics (AISTATS) PMLR 84: 106-114}.
 \examples{
 \donttest{
 ### 
+
+# load data
+data('ovarian', package='dimreduce')
+x <- ovarian$x
+y <- ovarian$y
+
+# dimension reduction
 dr <- spca(x,y, nctot=2)
 z <- predict(dr, x) # the latent features
 }

@@ -71,8 +71,8 @@ supervised iteration.}
 
 \item{perms}{Number of permutations to estimate the p-values for univariate scores.}
 
-\item{method}{Method to compute the principal components. Either 'svd' or 'power'. Power can sometimes
-be slightly faster but in some cases can have very slow convergence.}
+\item{method}{Method to compute the principal components. Either 'svd' or 'power'.
+'power' can sometimes be slightly faster but in some cases can have very slow convergence.}
 
 \item{...}{Currently ignored.}
 }
@@ -108,6 +108,13 @@ Intelligence and Statistics (AISTATS) PMLR 84: 106-114}.
 \examples{
 \donttest{
 ### 
+
+# load data
+data('ovarian', package='dimreduce')
+x <- ovarian$x
+y <- ovarian$y
+
+# dimension reduction
 dr <- ispca(x,y, nctot=2)
 z <- predict(dr, x) # the latent features
 }

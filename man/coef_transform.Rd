@@ -41,13 +41,13 @@ dr <- ispca(x,y, nctot=2)
 z <- predict(dr,x)
 
 # fit model
-fit <- glm(y ~ z, family = binomial())
+model <- glm(y ~ z, family = binomial())
 param_z <- coef(model)
 alpha_z <- param_z[1]
 beta_z <- param_z[2:3]
 
 # transform the linear model back to original feature space
-param_x <- coef_transform(dr, beta, alpha)
+param_x <- coef_transform(dr, beta_z, alpha_z)
 beta_x <- param_x$beta
 alpha_x <- param_x$alpha
 
