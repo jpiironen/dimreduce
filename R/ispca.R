@@ -256,37 +256,8 @@ ispca <- function(x,y, nctot=NULL, ncsup=NULL, exclude=NULL, nthresh=NULL, thres
   res <- list(w=rotation, z=latent, v=v, sdev=apply(latent,2,'sd'), 
               ncsup=ncsup, centers=centers, scales=scales, exclude=exclude)
   
-  class(res) <- 'ispca'
+  class(res) <- c('ispca', 'dimred')
   return(res)
-  
 }
-
-
-
-
-#' @export
-predict.ispca <- function(object, xnew, ...) {
-  predict.dimred(object, xnew)
-}
-
-#' @export 
-coeff.transform.ispca <- function(object, beta, alpha, ...) {
-  coeff.transform.dimred(object, beta, alpha)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

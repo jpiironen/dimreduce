@@ -241,30 +241,8 @@ spca <- function(x, y=NULL, nctot=NULL, ncsup=NULL, window=500,
   res <- list(w=rotation, z=latent, v=v_all, sdev=apply(latent,2,'sd'), 
               pval=pval, centers=centers, scales=scales, exclude=exclude)
   
-  class(res) <- 'spca'
+  class(res) <- c('spca', 'dimred')
   return(res)
   
 }
-
-
-
-
-#' @export
-predict.spca <- function(object, xnew, ...) {
-  predict.dimred(object, xnew)
-}
-
-#' @export 
-coeff.transform.spca <- function(object, beta, alpha, ...) {
-  coeff.transform.dimred(object, beta, alpha)
-}
-
-
-
-
-
-
-
-
-
 

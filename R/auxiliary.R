@@ -114,25 +114,17 @@ spcs <- function(x,y, thresh=NULL, nthresh=NULL, exclude=NULL, nc=1,
 
 
 
-coeff.transform.dimred <- function(object, beta, alpha) {
-  # transform linear regression coefficients from the z-space to 
-  # the original x-space
-  beta_x <- (object$w %*% beta)/object$scales
-  alpha_x <- alpha - colSums(object$centers*beta_x)
-  return(list(beta=beta_x, alpha=alpha_x))
-}
 
-
-
-predict.dimred <- function(model, xnew) {
+#' @export
+predict.dimred <- function(object, xnew, ...) {
   # map xnew to the latent variable space znew
-  d <- length(model$scales)
+  d <- length(object$scales)
   if (is.vector(xnew))
     xnew <- matrix(xnew, ncol=d)
   
-  ok <- setdiff(1:d, model$exclude)
-  xnew_standard <- t((t(xnew[,ok,drop=F])-model$centers[ok]) / model$scales[ok])
-  return(xnew_standard %*% model$w[ok,,drop=F])
+  ok <- setdiff(1:d, object$exclude)
+  xnew_standard <- t((t(xnew[,ok,drop=F])-object$centers[ok]) / object$scales[ok])
+  return(xnew_standard %*% object$w[ok,,drop=F])
 } 
 
 
