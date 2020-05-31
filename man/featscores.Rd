@@ -6,10 +6,16 @@
 \alias{featscore.test}
 \title{Univariate feature scores and significance tests}
 \usage{
-featscore(x, y, type = "pearson", exclude = NULL)
+featscore(x, y, type = "pearson", exclude = NULL, ...)
 
-featscore.test(x, y, type = "pearson", exclude = NULL, test.max = FALSE,
-  perms = 1000)
+featscore.test(
+  x,
+  y,
+  type = "pearson",
+  exclude = NULL,
+  test.max = FALSE,
+  perms = 1000
+)
 }
 \arguments{
 \item{x}{The original feature matrix, columns denoting the features and rows the instances.}
@@ -23,12 +29,12 @@ denote the runs test, that can potentially detect any nonlinear relationship.}
 
 \item{exclude}{Columns (variables) in x to ignore. The score will be zero for these.}
 
+\item{...}{Currently ignored.}
+
 \item{test.max}{If TRUE, compute the p-value for the maximum of the univariate scores.
 If FALSE (default), compute p-values separately for each feature.}
 
 \item{perms}{Number of random permutations to estimate the p-values for univariate scores.}
-
-\item{...}{Currently ignored.}
 }
 \value{
 A vector giving the univariate scores for each feature.

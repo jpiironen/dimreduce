@@ -4,10 +4,23 @@
 \alias{spca}
 \title{Supervised (and unsupervised) principal components}
 \usage{
-spca(x, y = NULL, nctot = NULL, ncsup = NULL, window = 500,
-  exclude = NULL, verbose = TRUE, normalize = FALSE, preprocess = TRUE,
-  alpha = NULL, perms = 1000, screenthresh = NULL, nfeat = NULL,
-  sup.only = FALSE, ...)
+spca(
+  x,
+  y = NULL,
+  nctot = NULL,
+  ncsup = NULL,
+  window = 500,
+  exclude = NULL,
+  verbose = TRUE,
+  normalize = FALSE,
+  preprocess = TRUE,
+  alpha = NULL,
+  perms = 1000,
+  screenthresh = NULL,
+  nfeat = NULL,
+  sup.only = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{The original feature matrix, columns denoting the features and rows the instances.}

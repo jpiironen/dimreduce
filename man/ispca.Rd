@@ -4,11 +4,27 @@
 \alias{ispca}
 \title{Iterative supervised principal components}
 \usage{
-ispca(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NULL,
-  thresh = NULL, window = 500, verbose = TRUE, min_score = 1e-04,
-  normalize = FALSE, center = TRUE, scale = TRUE, permtest = TRUE,
-  permtest_type = "max-marginal", alpha = 0.1, perms = 500,
-  method = "svd", ...)
+ispca(
+  x,
+  y,
+  nctot = NULL,
+  ncsup = NULL,
+  exclude = NULL,
+  nthresh = NULL,
+  thresh = NULL,
+  window = 500,
+  verbose = TRUE,
+  min_score = 1e-04,
+  normalize = FALSE,
+  center = TRUE,
+  scale = TRUE,
+  permtest = TRUE,
+  permtest_type = "max-marginal",
+  alpha = 0.1,
+  perms = 500,
+  method = "svd",
+  ...
+)
 }
 \arguments{
 \item{x}{The original feature matrix, columns denoting the features and rows the instances.}

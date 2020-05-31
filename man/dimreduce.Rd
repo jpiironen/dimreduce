@@ -3,7 +3,6 @@
 \docType{package}
 \name{dimreduce}
 \alias{dimreduce}
-\alias{dimreduce-package}
 \title{Dimension reduction for supervised learning}
 \description{
 \pkg{dimreduce} is an R package that provided functions for 
