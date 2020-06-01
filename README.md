@@ -3,7 +3,7 @@
 
 An R package to perform (supervised) dimensionality reduction. The package contains essentially the techniques from the paper of Piironen and Vehtari (2018). The functions are very easy to use and require minimal input from the user.
 
-I will add a vignette in the near future but below are some simple examples about how to use the package.
+Below are some simple examples about how to use the package. You can get more help by installing the package and then typing `?dimreduce` in R, and then exploring the function documentations.
 
 
 Installation

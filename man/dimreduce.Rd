@@ -14,10 +14,17 @@
 \describe{
  \item{\link{spca}, \link{ispca}}{
  Supervised PCA (SPCA) and iterative supervised PCA (ISPCA), that are useful techniques for
- dimension reduction. \link{spca} can also be used to  compute the standard unsupervised PCA.}
+ dimension reduction. \link{spca} can also be used to  compute the standard unsupervised PCA.
+ }
+ \item{\link{coef_transform}}{
+ Function that can be used to map linear model regression coefficients fitted using 
+ latent features from SPCA or ISPCA back to the original feature space. 
+ This can be useful for analysing the model.
+ }
  \item{\link{featscore}, \link{featscore.test}}{
- Functions for computing univariate relevance scores for the features, that can be used 
- for screening.}
+ Functions for computing univariate relevance scores and significance tests for the features, 
+ which can be used for screening.
+ }
 }
 }
 
