@@ -37,7 +37,7 @@ If FALSE (default), compute p-values separately for each feature.}
 \item{perms}{Number of random permutations to estimate the p-values for univariate scores.}
 }
 \value{
-A vector giving the univariate scores for each feature.
+A vector giving the univariate scores (\code{featscore}) or p-values (\code{featscore.test}) for each feature.
 }
 \description{
 \code{featscore} computes the univariate scores for each feature, and 
@@ -64,9 +64,48 @@ In Guyon, I., Gunn, S., Nikravesh, M., and Zadeh, L. A., editors,
 \examples{
 \donttest{
 ### 
-s <- featscore(x,y) # correlation
-s <- featscore(x,y, type='runs') # runs test, can detect nonlinear effects
-s <- featscore.test(x,y,type='spearman') # p-values for the rank-correlations
+
+# load the features x and target values y for the prostate cancer data
+data('prostate', package = 'dimreduce')
+x <- prostate$x
+y <- prostate$y
+
+# absolute correlation between the target and each of the features
+r <- featscore(x,y)
+plot(r)
+
+# compute the p-values for the univariate relevances of each original feature
+pval <- featscore.test(x,y)
+hist(pval, 30) # should have uniform distribution if no relevant variables
+sum(pval < 0.001) # number of variables with p-value below some threshold
+0.001*ncol(x) # how many significant p-values one would expect only due to chance
+
+
+# create some synthetic data
+set.seed(213039)
+func <- function(x) {
+  # linear in x1, nonlinear in x2 and x3 (other inputs are irrelevant)
+  x[,1] + x[,2]^2 + 3*cos(pi*x[,3])
+}
+sigma <- 0.5
+n <- 200
+p <- 10 # total number of features
+x <- matrix(rnorm(n*p), n, p)
+y <- func(x) + sigma*rnorm(n) # y = f(x) + e, e ~ N(0,sigma^2)
+
+# significance test for marginal rank correlations;
+# this is unlikely to detect any non-monotonic effects
+pval <- featscore.test(x,y, type='spearman')
+which(pval < 0.05)
+plot(pval)
+
+# runs test; this is a weaker test than correlation tests, but it
+# can potentially detect non-monotonic effects
+pval <- featscore.test(x,y, type='runs')
+which(pval < 0.05)
+plot(pval)
+
+
 }
 
 }
