@@ -1,6 +1,6 @@
 Package: dimreduce
 Title: Supervised Dimension Reduction 
-Version: 0.2.0
+Version: 0.2.1
 Author: Juho Piironen
 Maintainer: Juho Piironen <juho.t.piironen@gmail.com>
 Depends: R (>= 3.5.0)
