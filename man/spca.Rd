@@ -55,13 +55,13 @@ which features survive the screening and are used to compute the supervised comp
 
 \item{screenthresh}{Value between 0 and 1 (or \code{NULL}). If not \code{NULL}, then no permutation tests are
 run, and the supervised components
-are computed among those features that have their univariate score equal or larger than this. 
+are computed among those features that have their univariate score equal or larger than this.
 Value 1 means that only the feature with the highest score survives the screening, whereas value 0 means that
 the top \code{min(window, ncol(x))} survive the screening. Overwrites also \code{nfeat}-argument.}
 
 \item{nfeat}{Number of features to retain in the screening step. If this option is used, then
-the algorithm does not perform the permutation tests for the p-values, but instead computes the 
-supervised components from those features that have their univariate score among the \code{nfeat} 
+the algorithm does not perform the permutation tests for the p-values, but instead computes the
+supervised components from those features that have their univariate score among the \code{nfeat}
 highest scores (in this case \code{perms} and \code{alpha} are ignored).}
 
 \item{sup.only}{If \code{TRUE}, then no unsupervised components are ever computed even if the number of
@@ -73,7 +73,7 @@ supervised components that could be extracted was less than \code{nctot}.}
 spca-object that is similar to the object returned by \code{\link[stats]{prcomp}}.
 The object will have the following elements:
 \describe{
- \item{\code{w}}{The projection (or rotation) matrix W, that transforms the original data 
+ \item{\code{w}}{The projection (or rotation) matrix W, that transforms the original data
  \eqn{X} into the new features \eqn{Z = X W} .}
  \item{\code{z}}{The extracted latent features corresponding to the training inputs \eqn{X}.}
  \item{\code{v}}{Matrix \eqn{V} that is used to compute \eqn{W} when combining supervised and
@@ -115,15 +115,15 @@ Intelligence and Statistics (AISTATS) PMLR 84: 106-114}.
 
 \examples{
 \donttest{
-### 
+###
 
 # load data
-data('ovarian', package='dimreduce')
+data("ovarian", package = "dimreduce")
 x <- ovarian$x
 y <- ovarian$y
 
 # dimension reduction
-dr <- spca(x,y, nctot=2)
+dr <- spca(x, y, nctot = 2)
 z <- predict(dr, x) # the latent features
 }
 

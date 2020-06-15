@@ -80,13 +80,13 @@ supervised iteration.}
 ispca-object that is similar in spirit to the object returned by \code{\link[stats]{prcomp}}.
 The object will have the following elements:
 \describe{
- \item{\code{w}}{The projection (or rotation) matrix W, that transforms the original data 
+ \item{\code{w}}{The projection (or rotation) matrix W, that transforms the original data
  \eqn{X} into the new features \eqn{Z = X W} .}
  \item{\code{z}}{The extracted latent features corresponding to the training inputs \eqn{X}.}
  \item{\code{v}}{Matrix \eqn{V} that is used to compute \eqn{W}. The columns of \eqn{V} indicate
  which variables become active at each iteration (see the paper below for more information).}
  \item{\code{sdev}}{Standard deviations of the new features.}
- \item{\code{ncsup}}{How many supervised components were extracted (the rest are computed 
+ \item{\code{ncsup}}{How many supervised components were extracted (the rest are computed
  in an unsupervised manner).}
  \item{\code{centers}}{Mean values for the original variables.}
  \item{\code{scales}}{Scales of the original variables.}
@@ -107,15 +107,15 @@ Intelligence and Statistics (AISTATS) PMLR 84: 106-114}.
 
 \examples{
 \donttest{
-### 
+###
 
 # load data
-data('ovarian', package='dimreduce')
+data("ovarian", package = "dimreduce")
 x <- ovarian$x
 y <- ovarian$y
 
 # dimension reduction
-dr <- ispca(x,y, nctot=2)
+dr <- ispca(x, y, nctot = 2)
 z <- predict(dr, x) # the latent features
 }
 

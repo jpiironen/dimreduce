@@ -17,56 +17,55 @@
 \item{...}{Currently ignored.}
 }
 \value{
-A list with elements \code{beta} and \code{alpha} that give the model's 
+A list with elements \code{beta} and \code{alpha} that give the model's
 regression coefficients and intercept, respectively, in the original feature space.
 }
 \description{
 Transforms linear model coefficients from a model fitted using latent features z
 back to the original feature space x. This is possible since the dimension reduction methods
-PCA, SPCA and ISPCA are all linear, and consequently, if a linear model is fitted using 
+PCA, SPCA and ISPCA are all linear, and consequently, if a linear model is fitted using
 features z, it will correspond exactly to a linear model with features x.
 This function can be used to compute the regression coefficients and intercept of that model.
 }
 \examples{
 \donttest{
-### 
+###
 
 # load data
-data('ovarian', package = 'dimreduce')
+data("ovarian", package = "dimreduce")
 x <- ovarian$x
 y <- ovarian$y
 
 # perform dimension reduction (use first two latent features)
-dr <- ispca(x,y, nctot=2, normalize=TRUE)
-z <- predict(dr,x)
+dr <- ispca(x, y, nctot = 2, normalize = TRUE)
+z <- predict(dr, x)
 
 # fit model
 data <- data.frame(z, y)
-if (requireNamespace('rstanarm', quietly=TRUE)) {
+if (requireNamespace("rstanarm", quietly = TRUE)) {
 
   # Bayesian logistic regression
-  model <- rstanarm::stan_glm(y ~ ., data = data, family = binomial(), chains=2, iter=500)
+  model <- rstanarm::stan_glm(y ~ ., data = data, family = binomial(), chains = 2, iter = 500)
   param_z <- as.data.frame(model)
-  alpha_z <- t(param_z[,1])
-  beta_z <- t(param_z[,2:3])
-  
+  alpha_z <- t(param_z[, 1])
+  beta_z <- t(param_z[, 2:3])
+
   # transform the linear model back to original feature space
   param_x <- coef_transform(dr, beta_z, alpha_z)
   beta_x <- param_x$beta
   alpha_x <- param_x$alpha
-  
-  intervals <- apply(beta_x, 1, quantile, probs=c(0.05,0.5,0.95))
-  
-  if (require('ggplot2', quietly = TRUE)) {
+
+  intervals <- apply(beta_x, 1, quantile, probs = c(0.05, 0.5, 0.95))
+
+  if (require("ggplot2", quietly = TRUE)) {
     # plot the coefficient posteriors in the original space
     p <- ncol(x)
-    ggplot() + 
-      geom_linerange(aes(x=1:p, ymin=intervals[1,], ymax=intervals[3,])) +
-      geom_point(aes(x=1:p, y=intervals[2,])) +
-      ylab('Coefficient') + 
-      xlab('Feature')
+    ggplot() +
+      geom_linerange(aes(x = 1:p, ymin = intervals[1, ], ymax = intervals[3, ])) +
+      geom_point(aes(x = 1:p, y = intervals[2, ])) +
+      ylab("Coefficient") +
+      xlab("Feature")
   }
-  
 } else {
 
   # logistic regression
@@ -74,23 +73,21 @@ if (requireNamespace('rstanarm', quietly=TRUE)) {
   param_z <- coef(model)
   alpha_z <- param_z[1]
   beta_z <- param_z[2:3]
-  
+
   # transform the linear model back to original feature space
   param_x <- coef_transform(dr, beta_z, alpha_z)
   beta_x <- param_x$beta
   alpha_x <- param_x$alpha
-  
-  if (requireNamespace('ggplot2', quietly = TRUE)) {
+
+  if (requireNamespace("ggplot2", quietly = TRUE)) {
     # plot the coefficients in the original space
     p <- ncol(x)
-    ggplot2::ggplot() + 
-      ggplot2::geom_point(ggplot2::aes(x=1:p, y=beta_x)) +
-      ggplot2::ylab('Coefficient') + 
-      ggplot2::xlab('Feature')
+    ggplot2::ggplot() +
+      ggplot2::geom_point(ggplot2::aes(x = 1:p, y = beta_x)) +
+      ggplot2::ylab("Coefficient") +
+      ggplot2::xlab("Feature")
   }
 }
-
 }
-
 
 }

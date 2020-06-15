@@ -8,6 +8,6 @@ Description:
     Provides functions for dimension reduction, mainly for supervised learning. 
     Contains also methods for screening features.
 License: GPL-3
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Suggests:
     ggplot2, rstanarm

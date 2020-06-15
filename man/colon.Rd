@@ -4,11 +4,13 @@
 \name{colon}
 \alias{colon}
 \title{Colon cancer microarray data.}
-\format{Binary classification data set.
+\format{
+Binary classification data set.
 \describe{
   \item{y}{target, 0 or 1.}
   \item{x}{features, 2000 in total.}
-}}
+}
+}
 \usage{
 colon
 }

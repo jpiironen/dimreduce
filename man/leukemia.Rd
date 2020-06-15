@@ -4,11 +4,13 @@
 \name{leukemia}
 \alias{leukemia}
 \title{Leukemia cancer microarray data.}
-\format{Binary classification data set.
+\format{
+Binary classification data set.
 \describe{
   \item{y}{target, 0 or 1.}
   \item{x}{features, 7129 in total.}
-}}
+}
+}
 \usage{
 leukemia
 }
