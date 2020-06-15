@@ -122,7 +122,9 @@ ispca <- function(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NU
   latent <- matrix(nrow = n, ncol = nctot)
 
   if (ncsup > 0) {
-    print("Computing the supervised principal components..")
+    if (verbose) {
+      print("Computing the supervised principal components..")
+    }
 
     for (k in 1:ncsup) {
       if (permtest) {
@@ -130,14 +132,18 @@ ispca <- function(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NU
           pval <- featscore.test(x, y, exclude = exclude, perms = perms, test.max = T)
           if (!any(pval < alpha)) {
             k <- k - 1
-            print(sprintf("SPC %d failed the max-marginal permutation test, so stopping supervised iteration.", k + 1))
+            if (verbose) {
+              print(sprintf("SPC %d failed the max-marginal permutation test, so stopping supervised iteration.", k + 1))
+            }
             break
           }
         } else if (permtest_type == "marginal") {
           pval <- featscore.test(x, y, exclude = exclude, perms = perms)
           if (!any(pval < alpha)) {
             k <- k - 1
-            print(sprintf("SPC %d failed the marginal permutation test, so stopping supervised iteration.", k + 1))
+            if (verbose) {
+              print(sprintf("SPC %d failed the marginal permutation test, so stopping supervised iteration.", k + 1))
+            }
             break
           }
         }
@@ -168,7 +174,9 @@ ispca <- function(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NU
             }
             if (fails / perms > alpha) {
               k <- k - 1
-              print(sprintf("SPC %d failed the permutation test, so stopping supervised iteration.", k + 1))
+              if (verbose) {
+                print(sprintf("SPC %d failed the permutation test, so stopping supervised iteration.", k + 1))
+              }
               break
             }
           }
@@ -181,8 +189,9 @@ ispca <- function(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NU
       if (pca$score < min_score) {
         # score under the minimum, so terminate SPC computation
         k <- k - 1
-        print(sprintf("Could extract only %d supervised PCs although %s was asked.", k, ncsup))
-        # warning('Could extract only %d supervised PCs although .')
+        if (verbose) {
+          print(sprintf("Could extract only %d supervised PCs although %s was asked.", k, ncsup))
+        }
         break
       }
 
@@ -232,7 +241,9 @@ ispca <- function(x, y, nctot = NULL, ncsup = NULL, exclude = NULL, nthresh = NU
 
   if (ncsup < nctot) {
     # compute standard pc with the rest of the data variation
-    print("Computing the unsupervised principal components..")
+    if (verbose) {
+      print("Computing the unsupervised principal components..")
+    }
     if (length(ok) < nctot - ncsup) {
       nctot <- length(ok) - ncsup
     } # how many unsupervised PCs we can compute
