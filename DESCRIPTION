@@ -10,4 +10,6 @@ Description:
 License: GPL-3
 RoxygenNote: 7.1.0
 Suggests:
-    ggplot2, rstanarm
+    ggplot2, 
+    rstanarm,
+    testthat
