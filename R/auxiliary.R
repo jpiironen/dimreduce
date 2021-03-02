@@ -45,7 +45,7 @@ spcs <- function(x, y, thresh = NULL, nthresh = NULL, exclude = NULL, nc = 1,
     if (is.null(nthresh)) {
       nthresh <- 10
     }
-    thresh <- seq(0, 1, len = nthresh)
+    thresh <- seq(0, 1 - epsilon, len = nthresh)
   }
 
   if (any(thresh > 1 | thresh < 0)) {

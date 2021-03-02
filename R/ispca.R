@@ -15,7 +15,7 @@
 #' the computation time.
 #' @param thresh Instead of specifying \code{nthresh}, one can specify the candidate screening thresholds
 #' explicitly. These are numbers between 0 and 1 and are relative to the highest univariate score.
-#' By default seq(0,0.999,len=nthresh).
+#' By default seq(0, 1-eps, len=nthresh) where eps = 1e-6.
 #' @param window Maximum number of features to consider when computing each supervised component.
 #' Lowering this number makes the computation faster, but can make the algorithm less accurate
 #' if there are more potentially relevant features than this number.
