@@ -12,7 +12,7 @@ Binary classification data set.
 }
 }
 \usage{
-colon
+data("colon", package="dimreduce")
 }
 \description{
 Colon cancer microarray data.

@@ -12,7 +12,7 @@ Binary classification data set.
 }
 }
 \usage{
-ovarian
+data("ovarian", package="dimreduce")
 }
 \description{
 Ovarian cancer microarray data.

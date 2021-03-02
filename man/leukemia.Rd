@@ -12,7 +12,7 @@ Binary classification data set.
 }
 }
 \usage{
-leukemia
+data("leukemia", package="dimreduce")
 }
 \description{
 Leukemia cancer microarray data.

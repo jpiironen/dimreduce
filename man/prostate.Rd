@@ -12,7 +12,7 @@ Binary classification data set.
 }
 }
 \usage{
-prostate
+data("prostate", package="dimreduce")
 }
 \description{
 Prostate cancer microarray data.
